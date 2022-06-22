@@ -8,21 +8,32 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float radius;
     [SerializeField] private float turnSpeed;
-    private Vector3 desiredPosition=Vector3.zero;
+  
+    [SerializeField] private int segments;
+    [SerializeField] private float xradius;
+    [SerializeField] private float yradius;
+
+    private LineRenderer line;
+
+    private Vector3 desiredPosition = Vector3.zero;
     private Vector3 desiredTurn = Vector3.zero;
-    public int segments;
-    public float xradius;
-    public float yradius;
-    LineRenderer line;
 
-    void Start()
+    private Animator animator;
+    private float desiredAnimationSpeed;
+   [SerializeField] private float animationBlendSpeed;
+    private void Awake()
     {
-        line = GetComponent<LineRenderer>();
+       animator= GetComponent<Animator>();
+       line = GetComponent<LineRenderer>();
 
-        line.positionCount=segments + 1;
+    }
+    void Start()
+    {  
+        line.positionCount = segments + 1;
         line.useWorldSpace = false;
         CreatePoints();
     }
+
 
 
     void CreatePoints()
@@ -32,24 +43,35 @@ public class PlayerController : MonoBehaviour
         float z;
 
         float angle = 40f;
-
+        Vector3[] posints = new Vector3[segments+1];
         for (int i = 0; i < (segments + 1); i++)
         {
             x = Mathf.Sin(Mathf.Deg2Rad * angle) * xradius;
             z = Mathf.Cos(Mathf.Deg2Rad * angle) * yradius;
-
-            line.SetPosition(i, new Vector3(x, y,z));
+            posints[i] = new Vector3(x, y, z);
+         
 
             angle += (segments);
         }
+        line.SetPositions(posints);
     }
 
-    // Update is called once per frame
+ 
     void Update()
     {
         if (Input.GetButton("Fire1"))
         {
-            HandleMovemnt();
+            if (ClampJoystic.instance.CanDrag)
+            {
+                HandleMovemnt();
+            }
+           
+        }
+        if (Input.GetButtonUp("Fire1"))
+        {
+            desiredAnimationSpeed = 0;
+           
+            animator.SetFloat("speed", desiredAnimationSpeed);
         }
     }
 
@@ -62,8 +84,19 @@ public class PlayerController : MonoBehaviour
         transform.position += desiredPosition;
         desiredTurn = Vector3.forward * vertical + Vector3.right * horizontal;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredTurn), turnSpeed * Time.deltaTime);
+        if (desiredPosition.magnitude > 0)
+        {
+            desiredAnimationSpeed= 1;
+            
+        }
+        else
+        {
+            desiredAnimationSpeed = 0;
+           
+        }
+       
+        animator.SetFloat("speed", Mathf.Lerp(animator.GetFloat("speed"), desiredAnimationSpeed, animationBlendSpeed * Time.deltaTime));
 
-        
     }
   
 }
