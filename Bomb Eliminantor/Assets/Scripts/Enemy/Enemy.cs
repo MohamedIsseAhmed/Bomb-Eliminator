@@ -13,15 +13,34 @@ public class Enemy : MonoBehaviour
     private Animator animator;
     public GameObject sphere;
     public  EnemyState.EnemyType enemyType;
+    private HealthSystem healthSystem;
+    [SerializeField] private Transform weapon;
+    private void Awake()
+    {
+        healthSystem = GetComponent<HealthSystem>();
+    }
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        currentState = new Patrolling(gameObject, animator, player, navMeshAgent);
-       
+        currentState = new Patrolling(gameObject, animator, player, navMeshAgent,weapon);
+        healthSystem.OnDead += HealthSystem_OnDead;
     }
 
+    private void HealthSystem_OnDead(object sender, System.EventArgs e)
+    {
+        Debug.Log(this.name + "has died");
+        enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
+        GetComponent<HealthSystem>().enabled = false;
+       
+         
+    }
+    private void OnDisable()
+    {
+        healthSystem.OnDead -= HealthSystem_OnDead;
+    }
     void Update() 
     {
         currentState = currentState.StateProcessor();
@@ -33,6 +52,9 @@ public class Enemy : MonoBehaviour
         //print(Vector3.Angle(player.position, f));
         //print("distance:" + Vector3.Distance(player.position, transform.position));
     }
-  
+    public Transform GetWeapon()
+    {
+        return weapon;
+    }
 
 }

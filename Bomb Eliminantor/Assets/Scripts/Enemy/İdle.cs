@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class İdle : EnemyState
 {
-    public İdle(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent) : base(_npc, _animator, _player, _navMeshAgent)
+    public İdle(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform weapon) : base(_npc, _animator, _player, _navMeshAgent,weapon)
     {
         stateName = State.İdle;
         enemyType = EnemyType.İdle;
@@ -30,7 +30,7 @@ public class İdle : EnemyState
         //}
         if (Random.Range(0,100) < 0.10f)
         {
-            new Patrolling(npc, animator, player, navMeshAgent);
+            new Patrolling(npc, animator, player, navMeshAgent, weapon);
         }
     
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class Patrolling : EnemyState
 {
-    public Patrolling(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent) : base(_npc, _animator, _player, _navMeshAgent)
+    public Patrolling(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform weapon) : base(_npc, _animator, _player, _navMeshAgent,weapon)
     {
         enemyType = EnemyType.Patroller;
         stateName = State.Patrolling;
@@ -42,18 +42,18 @@ public class Patrolling : EnemyState
         {
             if (CanSeePlayer())
             {
-                nextState = new Chasing(npc, animator, player, navMeshAgent);
+                nextState = new Chasing(npc, animator, player, navMeshAgent, weapon);
                 eventStages = EventStages.Exit;
             }
             Vector3 direction=player.transform.position-npc.transform.position;
             float dot=Vector3.Dot(npc.transform.forward,direction);
             if(dot >1 && direction.magnitude< 15)
             {
-                nextState = new Chasing(npc, animator, player, navMeshAgent);
+                nextState = new Chasing(npc, animator, player, navMeshAgent,weapon);
                 eventStages = EventStages.Exit;
                 
             }
-            print(dot+","+direction.magnitude);
+            
             if (navMeshAgent.remainingDistance < 1)
             {
 
@@ -69,14 +69,6 @@ public class Patrolling : EnemyState
                     currentWaypoint = PatrollingRunner.instance.GetPayhs()[currentÝndex].transform.position;
                 }
 
-                /* TransformPoint(PatrollingRunner.instance.GetPayhs()[currentÝndex].transform.position*/
-
-                //if (Vector3.Distance(navMeshAgent.transform.position, currentWaypoint) < distanceThreshHold)
-                //{
-                //    waypointÝndex = (waypointÝndex + 1) % pathCount;
-                //    currentWaypoint = PatrollingRunner.instance.GetPayhs()[currentÝndex].transform.position;
-
-                //}
                 navMeshAgent.SetDestination(currentWaypoint);
               
             }
