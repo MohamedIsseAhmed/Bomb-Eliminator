@@ -14,6 +14,12 @@ public class HealthBar : MonoBehaviour
     private void Start()
     {
         healthSystem.OnTakeDamage+= HealthSystem_OnTakeDamage;
+        healthSystem.OnDead += HealthSystem_OnDead;
+    }
+
+    private void HealthSystem_OnDead(object sender, EventArgs e)
+    {
+       Destroy(gameObject);
     }
 
     private void HealthSystem_OnTakeDamage(object sender, EventArgs e)
@@ -23,7 +29,11 @@ public class HealthBar : MonoBehaviour
         fill›mage.fillAmount -= cutAmount;
         print(cutAmount);
     }
+    private void OnDisable()
+    {
+        healthSystem.OnTakeDamage -= HealthSystem_OnTakeDamage;
+        healthSystem.OnDead -= HealthSystem_OnDead;
+    }
 
-   
-    
+
 }

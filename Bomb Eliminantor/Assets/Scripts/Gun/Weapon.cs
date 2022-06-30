@@ -8,6 +8,10 @@ public class Weapon : MonoBehaviour
     public Transform prjectileSpawnPosition;
     private void Awake()
     {
+
+    }
+    private void Start()
+    {
         currentGun.projectileSpawnPostion = prjectileSpawnPosition;
     }
 }

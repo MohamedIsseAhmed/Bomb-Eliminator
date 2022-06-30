@@ -526,6 +526,7 @@ GameObject:
   - component: {fileID: 6334238005419839955}
   - component: {fileID: 1817196751}
   - component: {fileID: 1817196752}
+  - component: {fileID: 845477723512822617}
   - component: {fileID: 1817196745}
   m_Layer: 0
   m_Name: Player
@@ -693,14 +694,14 @@ MonoBehaviour:
   radius: 20
   turnSpeed: 20
   segments: 20
-  xradius: 20
-  yradius: 20
+  xradius: 10
+  yradius: 10
   sphereRadius: 10
   rotationFactor: 5
-  shootingDistanceRange: 10
+  shootingDistanceRange: 7
   weapon: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
   lookOffset: {x: 0, y: 0, z: 0}
-  animationBlendSpeed: 0
+  animationBlendSpeed: 15
   gunParent: {fileID: 8046222318623740206}
 --- !u!114 &6334238005419839955
 MonoBehaviour:
@@ -745,6 +746,20 @@ CapsuleCollider:
   m_Height: 3.74
   m_Direction: 1
   m_Center: {x: 0, y: 1.95, z: 0}
+--- !u!114 &845477723512822617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2038328479062804041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965542b585a317841aca0af394f2e26e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGun: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
+  gunParent: {fileID: 8046222318623740206}
 --- !u!114 &1817196745
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,12 +772,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 699f11f850a907844bd08daa650f1251, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 8063246872202297755, guid: 0f0d8cf30f5f3b34fa94ec2ccba15a89, type: 3}
+  gunType: 0
   shootingDistanceRange: 10
-  timeAfterToActivatePooledObjects: 2
   currentGun: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
-  poolBulletParent: {fileID: 0}
-  bulletPoolCount: 100
 --- !u!1 &2169982314992546974
 GameObject:
   m_ObjectHideFlags: 0

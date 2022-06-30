@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 public class Patrolling : EnemyState
 {
-    public Patrolling(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform weapon) : base(_npc, _animator, _player, _navMeshAgent,weapon)
+    public Patrolling(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,GunScriptableObject currentGun) :
+        base(_npc, _animator, _player, _navMeshAgent, currentGun)
     {
         enemyType = EnemyType.Patroller;
         stateName = State.Patrolling;
@@ -42,14 +43,14 @@ public class Patrolling : EnemyState
         {
             if (CanSeePlayer())
             {
-                nextState = new Chasing(npc, animator, player, navMeshAgent, weapon);
+                nextState = new Chasing(npc, animator, player, navMeshAgent, currentGun);
                 eventStages = EventStages.Exit;
             }
             Vector3 direction=player.transform.position-npc.transform.position;
             float dot=Vector3.Dot(npc.transform.forward,direction);
             if(dot >1 && direction.magnitude< 15)
             {
-                nextState = new Chasing(npc, animator, player, navMeshAgent,weapon);
+                nextState = new Chasing(npc, animator, player, navMeshAgent, currentGun);
                 eventStages = EventStages.Exit;
                 
             }

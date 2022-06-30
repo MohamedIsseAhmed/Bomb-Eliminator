@@ -5,11 +5,13 @@ using UnityEngine.Pool;
 
 public class Shooting : MonoBehaviour, IAimAndShoot
 {
-    //[SerializeField] private Transform projectileSwanPosition;
-    //[SerializeField] private Transform bulletOriganlPosition;
-    [SerializeField] private Bullet bulletPrefab;
+    public enum GunType
+    {
+        StandardGun,
+        LazerGun
+    }
+    [SerializeField] private GunType gunType;
     [SerializeField] private float shootingDistanceRange = 10;
-    [SerializeField] private float timeAfterToActivatePooledObjects = 2f;
     [SerializeField] GunScriptableObject currentGun;
     private float timer;
     private float timerMax;
@@ -18,34 +20,36 @@ public class Shooting : MonoBehaviour, IAimAndShoot
     private Animator animator;
     private PlayerController playerController;
 
-    [SerializeField] private Transform poolBulletParent;
-    private List<Bullet> bullets;
-    [SerializeField] private int bulletPoolCount;
-
     int shotsRemainingInBurst;
     private bool hasTarget;
+    private float timeBetWeenShots;
     private void Awake()
     {
-        timerMax = 0.25f;
+        if (gunType == GunType.StandardGun)
+        {
+            timeBetWeenShots = 0.25f;
+        }
+        else if(gunType == GunType.LazerGun)
+        {
+            timeBetWeenShots = 0.15f;
+        }
+        timerMax = timeBetWeenShots;
         animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
-        bullets = new List<Bullet>();
+       
         shootingDistanceRange = currentGun.burstCount;
     }
-    private void Start()
+
+    void Update()
     {
-       CreateBulletPool();
-    }
-    private void CreateBulletPool()
-    {
-        for (int i = 0; i < bulletPoolCount; i++)
+        
+        AimAndShoot(targetEnemy);
+        if (Input.GetMouseButtonUp(0))
         {
-            Bullet bullet = Instantiate(bulletPrefab, currentGun.projectileSpawnPostion.localPosition, Quaternion.identity, poolBulletParent);
-            bullet.gameObject.SetActive(false);
-            bullets.Add(bullet);
+            shootingDistanceRange = currentGun.burstCount;
         }
     }
-    void Update()
+    private void Fire()
     {
         if (timer > timerMax)
         {
@@ -66,18 +70,14 @@ public class Shooting : MonoBehaviour, IAimAndShoot
 
         }
         timer += Time.deltaTime;
-        AimAndShoot(targetEnemy);
-        if (Input.GetMouseButtonUp(0))
-        {
-            shootingDistanceRange = currentGun.burstCount;
-        }
     }
     private  void Shoot()
     {
-        GetBullet();
+       BulletPool.instance.GetBullet(currentGun);
     }
     public void AimAndShoot(Transform target)
-    {   
+    {
+      
         if(target != null && !playerController.ÝsDraging)
         {
             targetEnemy= target;
@@ -91,33 +91,14 @@ public class Shooting : MonoBehaviour, IAimAndShoot
                 Vector3 directionToEnemy = target.transform.position - transform.position;
                 transform.rotation = Quaternion.LookRotation(directionToEnemy);
                 animator.SetTrigger("Shoot");
+                Fire();
             }
         }
-        else
+        else if(targetEnemy == null || playerController.ÝsDraging)
         {
-             animator.SetTrigger("RifleDown");
+            animator.SetTrigger("RifleDown");
         }
     }
-    public Bullet GetBullet()
-    {
-        for (int i = 0; i < bulletPoolCount; i++)
-        {
-            if (!bullets[i].gameObject.activeInHierarchy)
-            {
-                bullets[i].gameObject.SetActive(true);
-                bullets[i].transform.position = currentGun.projectileSpawnPostion.position;
-                bullets[i].transform.rotation = Quaternion.identity;    
-                bullets[i].SetDirection(currentGun.projectileSpawnPostion.forward);
-                StartCoroutine(DeActivateProjectiles(bullets[i]));
-                return bullets[i];
-            }
-        }
-        return null;
-    }
-    IEnumerator DeActivateProjectiles(Bullet bullet)
-    {
-        yield return new WaitForSeconds(timeAfterToActivatePooledObjects);
-        bullet.transform.position =currentGun.projectileSpawnPostion.position;
-        bullet.gameObject.SetActive(false); 
-    }
+   
+  
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyState:MonoBehaviour
+public class EnemyState
 {
     protected enum State
     {
@@ -26,7 +26,7 @@ public class EnemyState:MonoBehaviour
     protected Transform player;
     protected EnemyState nextState;
     protected NavMeshAgent navMeshAgent;
-    protected Transform weapon;
+    protected GunScriptableObject currentGun;
     public enum EnemyType
     {
         Ýdle,
@@ -38,14 +38,14 @@ public class EnemyState:MonoBehaviour
     protected float visibleAngle = 30;
     protected float shootDistance = 10;
 
-    public EnemyState(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, Transform weapon)
+    public EnemyState(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, GunScriptableObject _currentGun=null)
     {
         Debug.Log("state created");
         this.npc= _npc;
         this.animator= _animator;
         this.player= _player;
         this.navMeshAgent= _navMeshAgent;
-        this.weapon= weapon;
+        this.currentGun = _currentGun;
     }
     public virtual void Enter()
     {

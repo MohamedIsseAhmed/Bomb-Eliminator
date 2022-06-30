@@ -40,9 +40,11 @@ public class PlayerController : MonoBehaviour
     private Vector3 gunSpawnPosition;
     [SerializeField] private Transform gunParent;
     private Vector3 gunrotaion;
+
+    private GunController gunController;
     private void Awake()
-    {
-      
+    {   
+       gunController = GetComponent<GunController>();
        animator = GetComponent<Animator>();
        line = GetComponent<LineRenderer>();
        aimAndShoot = GetComponent<IAimAndShoot>();
@@ -50,14 +52,14 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-        gunSpawnPosition = new Vector3(0.215000004f, 0.832000017f, 0.414999992f);
-        gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
+        //gunSpawnPosition = new Vector3(0.215000004f, 0.832000017f, 0.414999992f);
+        //gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
         line.positionCount = segments + 1;
         line.useWorldSpace = false;
         CreateCircle();
-        currentWeapon=Instantiate(weapon.gunPrfab.transform,gunSpawnPosition,Quaternion.Euler(gunrotaion),gunParent);
-        weaponOriginPosition =gunSpawnPosition;
-        weaponOriginRotation = gunrotaion;
+        //currentWeapon=Instantiate(weapon.gunPrfab.transform,gunSpawnPosition,Quaternion.Euler(gunrotaion),gunParent);
+        //weaponOriginPosition =gunSpawnPosition;
+        //weaponOriginRotation = gunrotaion;
 
     }
     void CreateCircle()
@@ -134,11 +136,11 @@ public class PlayerController : MonoBehaviour
         else
         {
             desiredAnimationSpeed = 0;
-            BringBackWeaponOriginPosition();
+           gunController.BringBackWeaponOriginPosition();
         }
         if (desiredAnimationSpeed > 0.95f)
         {
-            RepositionWeaponWhenRunning();
+            gunController.RepositionWeaponWhenRunning();
         }
        
         if (!isAiming)
@@ -149,8 +151,7 @@ public class PlayerController : MonoBehaviour
     //AnimationEvent
     private void BringBackWeaponOriginPosition()
     {
-       currentWeapon.transform.localPosition=weaponOriginPosition;
-       currentWeapon.transform.localEulerAngles = weaponOriginRotation;
+        gunController.BringBackWeaponOriginPosition();
 
     } 
     //AnimationEvent
@@ -162,8 +163,9 @@ public class PlayerController : MonoBehaviour
     //AnimationEvent
     private void WeaponPositionAndRotationOnShooting()
     {
-        currentWeapon.transform.localPosition=new Vector3(0.305999994f, 0.90200001f, 0.0689999983f);
-        currentWeapon.transform.localEulerAngles = new Vector3(302.237488f, 61.6823273f, 348.534119f);
+        //currentWeapon.transform.localPosition=new Vector3(0.305999994f, 0.90200001f, 0.0689999983f);
+        //currentWeapon.transform.localEulerAngles = new Vector3(302.237488f, 61.6823273f, 348.534119f);
+        gunController.WeaponPositionAndRotationOnShooting();
     }
 
     private IEnumerator Aim()
