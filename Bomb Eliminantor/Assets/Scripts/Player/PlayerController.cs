@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float radius;
     [SerializeField] private float turnSpeed;
   
-    [SerializeField] private int segments;
+    [SerializeField] private int segmentsOfLineRenderer;
+
     [SerializeField] private float xradius;
     [SerializeField] private float yradius;
     [SerializeField] private float sphereRadius;
@@ -29,19 +30,20 @@ public class PlayerController : MonoBehaviour
     private float desiredAnimationSpeed;
    [SerializeField] private float animationBlendSpeed;
 
-    private Vector3 weaponOriginPosition;
-    private Vector3 weaponOriginRotation;
+   
     private bool isAiming;
     private bool isDraging;
     public bool ÝsDraging { get { return isDraging; } private set { } }
-    private Transform currentTarget;
-    IAimAndShoot aimAndShoot;
-    private Transform currentWeapon;
-    private Vector3 gunSpawnPosition;
-    [SerializeField] private Transform gunParent;
-    private Vector3 gunrotaion;
 
+    private Transform currentTargetEnemyTransform;
+    IAimAndShoot aimAndShoot;
+    private Transform currentWeapon;  
+   
     private GunController gunController;
+
+    private Collider[] enemyAroundResults = new Collider[10];
+    [SerializeField] private int enemyColliders;
+    private float distanceBetweenPlayerAndEnemy = Mathf.Infinity;
     private void Awake()
     {   
        gunController = GetComponent<GunController>();
@@ -52,14 +54,9 @@ public class PlayerController : MonoBehaviour
     }
     void Start()
     {
-        //gunSpawnPosition = new Vector3(0.215000004f, 0.832000017f, 0.414999992f);
-        //gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
-        line.positionCount = segments + 1;
+        line.positionCount = segmentsOfLineRenderer + 1;
         line.useWorldSpace = false;
         CreateCircle();
-        //currentWeapon=Instantiate(weapon.gunPrfab.transform,gunSpawnPosition,Quaternion.Euler(gunrotaion),gunParent);
-        //weaponOriginPosition =gunSpawnPosition;
-        //weaponOriginRotation = gunrotaion;
 
     }
     void CreateCircle()
@@ -69,15 +66,15 @@ public class PlayerController : MonoBehaviour
         float z;
 
         float angle = 40f;
-        Vector3[] posints = new Vector3[segments+1];
-        for (int i = 0; i < (segments + 1); i++)
+        Vector3[] posints = new Vector3[segmentsOfLineRenderer+1];
+        for (int i = 0; i < (segmentsOfLineRenderer + 1); i++)
         {
             x = Mathf.Sin(Mathf.Deg2Rad * angle) * xradius;
             z = Mathf.Cos(Mathf.Deg2Rad * angle) * yradius;
             posints[i] = new Vector3(x, y, z);
          
 
-            angle += (segments);
+            angle += (segmentsOfLineRenderer);
         }
         line.SetPositions(posints);
     }
@@ -163,9 +160,7 @@ public class PlayerController : MonoBehaviour
     //AnimationEvent
     private void WeaponPositionAndRotationOnShooting()
     {
-        //currentWeapon.transform.localPosition=new Vector3(0.305999994f, 0.90200001f, 0.0689999983f);
-        //currentWeapon.transform.localEulerAngles = new Vector3(302.237488f, 61.6823273f, 348.534119f);
-        gunController.WeaponPositionAndRotationOnShooting();
+        gunController.WeaponPositionAndRotationOnShootingPlayer();
     }
 
     private IEnumerator Aim()
@@ -177,26 +172,37 @@ public class PlayerController : MonoBehaviour
     }
     private void CheckEnemyAround()
     {
-        Collider[] results=new Collider[10];
-        int enemyColliders = Physics.OverlapSphereNonAlloc(transform.position, sphereRadius, results,enemyLayerMaks);
-      
-        for (int i = 0; i <enemyColliders; i++)
+        enemyColliders = Physics.OverlapSphereNonAlloc(transform.position, sphereRadius, enemyAroundResults, enemyLayerMaks,QueryTriggerInteraction.Ignore);
+     
+        for (int i = 0; i < enemyColliders; i++)
         {
-            Enemy enemy = results[i].GetComponent<Enemy>();
-            if (enemy != null)
+            Enemy enemy = enemyAroundResults[i].GetComponent<Enemy>();
+            float distanceToEnemy = Vector3.Distance(transform.position, enemy.transform.position);
+           
+            if (Vector3.Distance(transform.position, enemy.transform.position) < shootingDistanceRange)
             {
-                currentTarget = enemy.transform;
-                print(results[i].transform.name);
-                
-                aimAndShoot.AimAndShoot(currentTarget);
-                print("shoot");
+                enemy.ActivateCrossHair(true);
+                if (distanceToEnemy< distanceBetweenPlayerAndEnemy)
+                {
+                    currentTargetEnemyTransform=enemy.transform;
+                    aimAndShoot.AimAndShoot(currentTargetEnemyTransform);
+                    distanceBetweenPlayerAndEnemy = distanceToEnemy;
+                   
+                }
+                else
+                {
+                    currentTargetEnemyTransform = enemy.transform;
+                    aimAndShoot.AimAndShoot(currentTargetEnemyTransform);
+                    enemy.ActivateCrossHair(true);
+                }
             }
             else
             {
-                print("null");
+                enemy.ActivateCrossHair(false);
             }
-            
+           
         }
+        
        
     }
   

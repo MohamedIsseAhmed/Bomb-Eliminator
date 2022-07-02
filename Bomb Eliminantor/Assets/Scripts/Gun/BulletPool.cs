@@ -34,9 +34,9 @@ public class BulletPool : MonoBehaviour
             bullets.Add(bullet);
         }
     }
-    public Bullet GetBullet(GunScriptableObject currentGun )
+    public Bullet GetBullet(Transform projectileSpawnPosition )
     {
-        if(currentGun == null)
+        if(projectileSpawnPosition == null)
         {
             print("is is null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
@@ -45,20 +45,20 @@ public class BulletPool : MonoBehaviour
             if (!bullets[i].gameObject.activeInHierarchy)
             {
                 bullets[i].gameObject.SetActive(true);
-                bullets[i].transform.position = currentGun.projectileSpawnPostion.position;
-                print(currentGun.gunPrfab.name);
+                bullets[i].transform.position = projectileSpawnPosition.position;
+                print(projectileSpawnPosition.name);
                 bullets[i].transform.rotation = Quaternion.identity;
-                bullets[i].SetDirection(currentGun.projectileSpawnPostion.forward);
-                StartCoroutine(DeActivateProjectiles(bullets[i],currentGun));
+                bullets[i].SetDirection(projectileSpawnPosition.forward);
+                StartCoroutine(DeActivateProjectiles(bullets[i], projectileSpawnPosition));
                 return bullets[i];
             }
         }
         return null;
     }
-    IEnumerator DeActivateProjectiles(Bullet bullet,GunScriptableObject currentGun)
+    IEnumerator DeActivateProjectiles(Bullet bullet,Transform projectileSpawnPosition)
     {
         yield return new WaitForSeconds(timeAfterToActivatePooledObjects);
-        bullet.transform.position = currentGun.projectileSpawnPostion.position;
+        bullet.transform.position = projectileSpawnPosition.position;
         bullet.gameObject.SetActive(false);
     }
 }

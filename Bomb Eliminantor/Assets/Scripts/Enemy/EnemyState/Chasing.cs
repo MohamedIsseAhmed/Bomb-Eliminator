@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Chasing : EnemyState
 {
-    public Chasing(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,GunScriptableObject currentGun) : 
+    public Chasing(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) : 
         base(_npc, _animator, _player, _navMeshAgent, currentGun)
     {
         stateName = State.Chasing;
@@ -37,7 +37,7 @@ public class Chasing : EnemyState
     }
     private void WeaponPositionOnRunning()
     {
-        currentGun.gunPrfab.transform.localPosition = new Vector3(0.298000008f, 0.782000005f, 0.257999986f);
-        currentGun.gunPrfab.transform.localEulerAngles = new Vector3(322.085358f, 70.1041412f, 352.622131f);
+        currentGun.localPosition = new Vector3(0.298000008f, 0.782000005f, 0.257999986f);
+        currentGun.localEulerAngles = new Vector3(322.085358f, 70.1041412f, 352.622131f);
     }
 }

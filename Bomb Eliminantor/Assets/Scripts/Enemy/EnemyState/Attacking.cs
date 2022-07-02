@@ -7,20 +7,22 @@ public class Attacking : EnemyState,IAimAndShoot
 {
   
     private Vector3 weaponOrigingPosition;
+    private Vector3 weaponOriginRotation;
     private Enemy enemy;
     public event EventHandler OnShootingStarted;
     private float timer;
     private float timerMax;
     private int shootingDistanceRange;
-    public Attacking(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,GunScriptableObject currentGun) :
+    public Attacking(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) :
         base(_npc, _animator, _player, _navMeshAgent, currentGun)
     {
         stateName = EnemyState.State.Attcking;
-        timer = 0.25f;
+        timerMax = 1f;
     }
     public override void Enter()
     {
-        weaponOrigingPosition = currentGun.gunPrfab.transform.localPosition;
+        weaponOrigingPosition = currentGun.localPosition;
+        weaponOriginRotation = currentGun.localEulerAngles;
         animator.SetTrigger("Run");
         navMeshAgent.isStopped = true;
         base.Enter();
@@ -42,13 +44,14 @@ public class Attacking : EnemyState,IAimAndShoot
         }
         else
         {
+            
             animator.ResetTrigger(state);
             state="Fire";
-            OnShootingStarted?.Invoke(this, EventArgs.Empty);
             GunPositionOnShooting();
+           // OnShootingStarted?.Invoke(this, EventArgs.Empty);
             navMeshAgent.isStopped = true;
             AimAndShoot(player);
-           
+            Fire();
         }
         animator.SetTrigger(state);
     }
@@ -60,12 +63,16 @@ public class Attacking : EnemyState,IAimAndShoot
     }
     private void GunPositionOnShooting()
     {
-        currentGun.gunPrfab.transform.localPosition = new Vector3(0.294999987f, 0.947000027f, 0.147f);
-        currentGun.gunPrfab.transform.localEulerAngles =new Vector3(300.602997f, 75.4687881f, 348.521545f);
+      
+        currentGun.localPosition= new Vector3(0.294999987f, 0.947000027f, 0.147f);
+        currentGun.localEulerAngles =new Vector3(300.602997f, 75.4687881f, 348.521545f);
+       
     }
     private void BringBackWeaponToOrigingPosition()
     {
-        currentGun.gunPrfab.transform.localPosition = weaponOrigingPosition;
+       
+        currentGun.localPosition = weaponOrigingPosition;
+        currentGun.localEulerAngles = weaponOriginRotation;
     }
 
     public void AimAndShoot(Transform target)
@@ -83,26 +90,13 @@ public class Attacking : EnemyState,IAimAndShoot
         {
             timer = 0;
             Shoot();
-            Debug.Log(".................................shot");
-            //if (currentGun.fireMode == GunScriptableObject.FireMode.Auto)
-            //{
-            //    Shoot();
-            //}
-            //else if (currentGun.fireMode == GunScriptableObject.FireMode.Burst)
-            //{
-            //    if (shootingDistanceRange == 0)
-            //    {
-            //        return;
-            //    }
-            //    Shoot();
-            //    shootingDistanceRange--;
-            //}
+            
 
         }
         timer += Time.deltaTime;
     }
     private void Shoot()
     {
-        BulletPool.instance.GetBullet(currentGun);
+        EnemyBulletPool.instance.GetBullet(currentGun);
     }
 }

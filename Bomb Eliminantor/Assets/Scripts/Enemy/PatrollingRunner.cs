@@ -19,7 +19,7 @@ public class PatrollingRunner : MonoBehaviour
     {
         paths=new List<GameObject>();
         paths.AddRange(GameObject.FindGameObjectsWithTag("path"));
-        print(paths.Count);
+        
     }
     public IEnumerator FollowPath(NavMeshAgent navMeshAgent,Vector3[] pathPositions)
     {

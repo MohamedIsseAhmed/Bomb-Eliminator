@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class İdle : EnemyState
 {
-    public İdle(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,GunScriptableObject currentGun) : 
+    public İdle(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) : 
         base(_npc, _animator, _player, _navMeshAgent,currentGun)
     {
         stateName = State.İdle;

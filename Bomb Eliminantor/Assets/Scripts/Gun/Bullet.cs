@@ -55,7 +55,7 @@ public class Bullet : MonoBehaviour
     public void DisableBullet()
     {
         
-        print("disabled");
+        
        // gameObject.SetActive(false);
         
     }

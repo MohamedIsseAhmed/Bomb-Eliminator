@@ -693,16 +693,16 @@ MonoBehaviour:
   speed: 8
   radius: 20
   turnSpeed: 20
-  segments: 20
+  segmentsOfLineRenderer: 20
   xradius: 10
   yradius: 10
-  sphereRadius: 10
+  sphereRadius: 20
   rotationFactor: 5
   shootingDistanceRange: 7
   weapon: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
   lookOffset: {x: 0, y: 0, z: 0}
   animationBlendSpeed: 15
-  gunParent: {fileID: 8046222318623740206}
+  enemyColliders: 0
 --- !u!114 &6334238005419839955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -775,6 +775,10 @@ MonoBehaviour:
   gunType: 0
   shootingDistanceRange: 10
   currentGun: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
+  sphereRadius: 0
+  enemyLayerMaks:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &2169982314992546974
 GameObject:
   m_ObjectHideFlags: 0

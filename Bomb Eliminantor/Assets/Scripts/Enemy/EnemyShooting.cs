@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyShooting : MonoBehaviour, IAimAndShoot
+public class EnemyShooting : MonoBehaviour
 {
     [SerializeField] EnemyState.EnemyType enemyType;
     public enum EnemyShooterType
@@ -15,8 +15,11 @@ public class EnemyShooting : MonoBehaviour, IAimAndShoot
     private Transform target;
     private float timer;
     private float timerMax;
+
+    private GunController gunController;
     private void Awake()
     {
+        gunController = GetComponent<GunController>();  
         timerMax = 1f;
         enemy = GetComponent<Enemy>();
     }
@@ -39,39 +42,12 @@ public class EnemyShooting : MonoBehaviour, IAimAndShoot
         if (targetPlayer != null)
         {
             print("shoot the Player");
-            Fire();
+          
         }
-    }
-
-    private void Fire()
-    {
         
-        if (timer > timerMax)
-        {
-            timer = 0;
-            Shoot();
-            print(".................................shot");
-            //if (currentGun.fireMode == GunScriptableObject.FireMode.Auto)
-            //{
-            //    Shoot();
-            //}
-            //else if (currentGun.fireMode == GunScriptableObject.FireMode.Burst)
-            //{
-            //    if (shootingDistanceRange == 0)
-            //    {
-            //        return;
-            //    }
-            //    Shoot();
-            //    shootingDistanceRange--;
-            //}
+    }
 
-        }
-        timer += Time.deltaTime;
-    }
-    private void Shoot()
-    {
-        BulletPool.instance.GetBullet(GetComponent<GunController>().CurrentGun);
-    }
+   
     private void Attacking_OnShootingStarted(object sender, System.EventArgs e)
     {
         print("start firing Bullet");

@@ -26,7 +26,7 @@ public class EnemyState
     protected Transform player;
     protected EnemyState nextState;
     protected NavMeshAgent navMeshAgent;
-    protected GunScriptableObject currentGun;
+    protected Transform currentGun;
     public enum EnemyType
     {
         Ýdle,
@@ -38,9 +38,9 @@ public class EnemyState
     protected float visibleAngle = 30;
     protected float shootDistance = 10;
 
-    public EnemyState(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, GunScriptableObject _currentGun=null)
+    public EnemyState(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, Transform _currentGun=null)
     {
-        Debug.Log("state created");
+        
         this.npc= _npc;
         this.animator= _animator;
         this.player= _player;

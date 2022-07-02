@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
 
     //[SerializeField] private List<Transform> paths;
+    [SerializeField] private CrossHair crossHair;
     [SerializeField] private GunScriptableObject gunScriptableObject;
     private EnemyState currentState;
     private Transform player;
@@ -16,7 +17,7 @@ public class Enemy : MonoBehaviour
     public  EnemyState.EnemyType enemyType;
     private HealthSystem healthSystem;
     private Transform weapon;
-
+    private Transform currentGun;
     public event EventHandler<EnemyState> OnShootingStarted;
     private void Awake()
     {
@@ -24,12 +25,13 @@ public class Enemy : MonoBehaviour
     }
     void Start()
     {
-       // gunScriptableObject = GetComponent<GunController>().CurrentGun;
+        gunScriptableObject = GetComponent<GunController>().CurrentGun;
+        currentGun = GetComponent<GunController>().CurrentWeapon;
         weapon = GetComponent<GunController>().CurrentWeapon;
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        currentState = new Patrolling(gameObject, animator, player, navMeshAgent, gunScriptableObject);
+        currentState = new Patrolling(gameObject, animator, player, navMeshAgent, currentGun);
         healthSystem.OnDead += HealthSystem_OnDead;
         healthSystem.OnTakeDamage += HealthSystem_OnTakeDamage;
       
@@ -37,7 +39,7 @@ public class Enemy : MonoBehaviour
 
     private void HealthSystem_OnTakeDamage(object sender, EventArgs e)
     {
-       GeAttackStatete();
+       //GeAttackStatete();
     }
 
     private void Attacking_OnShootingStarted(object sender, System.EventArgs e)
@@ -74,7 +76,11 @@ public class Enemy : MonoBehaviour
         Attacking attacking=currentState.StateProcessor() as Attacking;
         attacking1 = attacking;
         attacking.OnShootingStarted += Attacking_OnShootingStarted;
-        OnShootingStarted?.Invoke(this,attacking);
+        OnShootingStarted?.Invoke(this, attacking);
         return currentState;
+    }
+    public void ActivateCrossHair(bool is›nShhotingRange)
+    {
+        crossHair.ShowCrossHair(is›nShhotingRange);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class Patrolling : EnemyState
 {
-    public Patrolling(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,GunScriptableObject currentGun) :
+    public Patrolling(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) :
         base(_npc, _animator, _player, _navMeshAgent, currentGun)
     {
         enemyType = EnemyType.Patroller;
