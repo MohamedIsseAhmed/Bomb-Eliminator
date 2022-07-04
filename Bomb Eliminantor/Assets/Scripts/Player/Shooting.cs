@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Shooting : MonoBehaviour, IAimAndShoot
+public class Shooting : MonoBehaviour
 {
     public enum GunType
     {
@@ -25,21 +25,23 @@ public class Shooting : MonoBehaviour, IAimAndShoot
 
     int shotsRemainingInBurst;
     private bool hasTarget;
-    private float timeBetWeenShots;
+    [SerializeField] private float timeBetWeenShots;
     private GunController gunController;
 
     private HealthSystem healthSystem;
+    private int Obstaclelayer = 1 << 7;
+    private int mayRayDistance = 10;
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
         gunController = GetComponent<GunController>();
         if (gunType == GunType.StandardGun)
         {
-            timeBetWeenShots = 0.2f;
+            //timeBetWeenShots = 0.2f;
         }
         else if(gunType == GunType.LazerGun)
         {
-            timeBetWeenShots = 0.3f;
+            //timeBetWeenShots = 0.3f;
         }
         timerMax = timeBetWeenShots;
         animator = GetComponent<Animator>();
@@ -77,7 +79,7 @@ public class Shooting : MonoBehaviour, IAimAndShoot
             timer = 0;
             if (GetComponent<GunController>().CurrentGun.fireMode == GunScriptableObject.FireMode.Auto)
             {
-                Shoot();
+                GetTheBullet();
                 SoundManager.instance.PlaySound(SoundManager.Sound.NormalBullet1);
             }
             else if (GetComponent<GunController>().CurrentGun.fireMode == GunScriptableObject.FireMode.Burst)
@@ -87,7 +89,7 @@ public class Shooting : MonoBehaviour, IAimAndShoot
                     burstCount = currentGun.burstCount;
                 }
                 SoundManager.instance.PlaySound(SoundManager.Sound.NormalBullet1);
-                Shoot();
+                GetTheBullet();
 
                 shootingDistanceRange--;
             }
@@ -95,38 +97,55 @@ public class Shooting : MonoBehaviour, IAimAndShoot
         }
         timer += Time.deltaTime;
     }
-    private  void Shoot()
+    private  void GetTheBullet()
     {
        BulletPool.instance.GetBullet(gunController.ProjectileSpawnPosition);
     }
     public void AimAndShoot(Transform target)
     {
-       
-        if (target != null && !playerController.›sDraging)
+
+        if (target != null)
         {
-            targetEnemy= target;
-            if (targetEnemy.GetComponent<HealthSystem>().›sDead())
+            
+            if (IsThereEnemy›nMyFront(target))
             {
-                animator.SetTrigger("RifleDown");
                 return;
             }
-            if (Vector3.Distance(transform.position, target.position) < shootingDistanceRange)
+            else if (!playerController.›sDraging)
             {
-                Vector3 directionToEnemy = target.transform.position - transform.position;
-                transform.rotation = Quaternion.LookRotation(directionToEnemy);
-                animator.SetTrigger("Shoot");
-                
-                Fire();
-                
+                ShootTheEnemy(targetEnemy);
             }
-        }
-       
-        else if(targetEnemy == null || playerController.›sDraging)
-        {
-            animator.SetTrigger("RifleDown");
+            else if (targetEnemy == null || playerController.›sDraging)
+            {
+                animator.SetTrigger("RifleDown");
+            }  
         }
 
     }
-    
-    
+    private void ShootTheEnemy(Transform _targetEnemy)
+    {
+        targetEnemy = _targetEnemy;
+        if (targetEnemy.GetComponent<HealthSystem>().›sDead())
+        {
+            animator.SetTrigger("RifleDown");
+            return;
+        }
+        if (Vector3.Distance(transform.position, targetEnemy.position) < shootingDistanceRange)
+        {
+            Vector3 directionToEnemy = targetEnemy.transform.position - transform.position;
+            transform.rotation = Quaternion.LookRotation(directionToEnemy);
+            animator.SetTrigger("Shoot");
+
+            Fire();
+
+        }
+    }
+    private bool IsThereEnemy›nMyFront(Transform _targetEnemy)
+    {
+        targetEnemy=_targetEnemy;
+        Ray ray = new Ray(transform.position + Vector3.up, (targetEnemy.position - transform.position));
+        RaycastHit raycastHit;
+        Debug.DrawRay(ray.origin, ray.direction * 10, Color.red);
+        return  Physics.Raycast(ray, out raycastHit, mayRayDistance, Obstaclelayer);
+    }
 }

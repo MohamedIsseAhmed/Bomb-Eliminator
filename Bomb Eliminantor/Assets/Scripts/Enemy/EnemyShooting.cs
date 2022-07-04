@@ -46,17 +46,5 @@ public class EnemyShooting : MonoBehaviour
         }
         
     }
-
-   
-    private void Attacking_OnShootingStarted(object sender, System.EventArgs e)
-    {
-        print("start firing Bullet");
-        //Destroy(gameObject);
-    }
-
-    
-    public void AimAndShoot(Transform target)
-    {
-        throw new System.NotImplementedException();
-    }
+ 
 }

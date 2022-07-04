@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
 
     //[SerializeField] private List<Transform> paths;
     [SerializeField] private CrossHair crossHair;
+    [SerializeField] private LayerMask obstacle;
     [SerializeField] private GunScriptableObject gunScriptableObject;
     private EnemyState currentState;
     private Transform player;
@@ -18,9 +19,13 @@ public class Enemy : MonoBehaviour
     private HealthSystem healthSystem;
     private Transform weapon;
     private Transform currentGun;
+  
+    protected PatrollingRunner patrollingRunner;
+
     public event EventHandler<EnemyState> OnShootingStarted;
     private void Awake()
     {
+        patrollingRunner =GetComponent<PatrollingRunner>();
         healthSystem = GetComponent<HealthSystem>();
     }
     void Start()
@@ -31,7 +36,7 @@ public class Enemy : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        currentState = new Patrolling(gameObject, animator, player, navMeshAgent, currentGun);
+        currentState = new Patrolling(gameObject, animator, player, navMeshAgent, currentGun, patrollingRunner);
         healthSystem.OnDead += HealthSystem_OnDead;
         healthSystem.OnTakeDamage += HealthSystem_OnTakeDamage;
       
@@ -64,6 +69,7 @@ public class Enemy : MonoBehaviour
     }
     void Update() 
     {
+       
         currentState = currentState.StateProcessor();
         
     }

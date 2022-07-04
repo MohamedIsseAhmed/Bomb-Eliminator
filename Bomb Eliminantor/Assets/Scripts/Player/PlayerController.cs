@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     public bool ÝsDraging { get { return isDraging; } private set { } }
 
     private Transform currentTargetEnemyTransform;
-    IAimAndShoot aimAndShoot;
+    private Shooting aimAndShoot;
     private Transform currentWeapon;  
    
     private GunController gunController;
@@ -44,13 +44,13 @@ public class PlayerController : MonoBehaviour
     private Collider[] enemyAroundResults = new Collider[10];
     [SerializeField] private int enemyColliders;
     private float distanceBetweenPlayerAndEnemy = Mathf.Infinity;
+
     private void Awake()
     {   
        gunController = GetComponent<GunController>();
        animator = GetComponent<Animator>();
        line = GetComponent<LineRenderer>();
-       aimAndShoot = GetComponent<IAimAndShoot>();
-
+       aimAndShoot = GetComponent<Shooting>();
     }
     void Start()
     {
@@ -82,6 +82,7 @@ public class PlayerController : MonoBehaviour
  
     void Update()
     {
+      
         if (Input.GetMouseButtonDown(0))
         {
             isAiming = false;

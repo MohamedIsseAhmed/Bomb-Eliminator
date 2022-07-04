@@ -27,6 +27,7 @@ public class EnemyState
     protected EnemyState nextState;
     protected NavMeshAgent navMeshAgent;
     protected Transform currentGun;
+    protected PatrollingRunner patrollingRunner;
     public enum EnemyType
     {
         Ýdle,
@@ -38,7 +39,7 @@ public class EnemyState
     protected float visibleAngle = 30;
     protected float shootDistance = 10;
 
-    public EnemyState(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, Transform _currentGun=null)
+    public EnemyState(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, Transform _currentGun=null,PatrollingRunner _patrollingRunner = null)
     {
         
         this.npc= _npc;
@@ -46,6 +47,7 @@ public class EnemyState
         this.player= _player;
         this.navMeshAgent= _navMeshAgent;
         this.currentGun = _currentGun;
+        this.patrollingRunner = _patrollingRunner;
     }
     public virtual void Enter()
     {

@@ -10,7 +10,7 @@ public class HealthSystem : MonoBehaviour,IDamagable
     private Animator animator;
     private Rigidbody rb;
     private bool isAppliedForce=false;
-    private float timeToStopForce=0.25f;
+    private float timeToStopForce=0.15f;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -45,6 +45,8 @@ public class HealthSystem : MonoBehaviour,IDamagable
     {
         if (!isAppliedForce)
         {
+            rb.isKinematic = false;
+            rb.constraints = RigidbodyConstraints.None;
             Vector3 forceVector = -transform.forward * 2;
             rb.AddForceAtPosition(forceVector * force, transform.position, ForceMode.VelocityChange);
             isAppliedForce = true;

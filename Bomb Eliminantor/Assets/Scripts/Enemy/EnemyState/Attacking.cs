@@ -8,11 +8,18 @@ public class Attacking : EnemyState,IAimAndShoot
   
     private Vector3 weaponOrigingPosition;
     private Vector3 weaponOriginRotation;
-    private Enemy enemy;
+   
     public event EventHandler OnShootingStarted;
+
     private float timer;
     private float timerMax;
-    private int shootingDistanceRange;
+
+    private float distanceToTarget=7.55f;
+    private Vector3 directionToPlayer = Vector3.zero;
+    private float turnSpeed = 15f;
+
+    private int Obstaclelayer = 1 << 7;
+    private int maxRayDistance = 5;
     public Attacking(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) :
         base(_npc, _animator, _player, _navMeshAgent, currentGun)
     {
@@ -30,31 +37,51 @@ public class Attacking : EnemyState,IAimAndShoot
     string state;
     public override void Update()
     {
-        Vector3 direction = player.transform.position - npc.transform.position;
-        Quaternion lookDirection = Quaternion.LookRotation(direction);
-        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookDirection, 15 * Time.deltaTime);
-      
-        if(Vector3.Distance(player.transform.position, navMeshAgent.transform.position) > 7.54f)
+        directionToPlayer = player.transform.position - npc.transform.position;
+        Quaternion lookDirection = Quaternion.LookRotation(directionToPlayer);
+        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookDirection, turnSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(player.transform.position, navMeshAgent.transform.position) > distanceToTarget)
         {
-            animator.ResetTrigger(state);
-            state ="stop";
+
+            state = "stop";
             navMeshAgent.SetDestination(player.transform.position);
             navMeshAgent.isStopped = false;
             BringBackWeaponToOrigingPosition();
         }
         else
         {
-            
-            animator.ResetTrigger(state);
-            state="Fire";
-            GunPositionOnShooting();
-           // OnShootingStarted?.Invoke(this, EventArgs.Empty);
-            navMeshAgent.isStopped = true;
-            AimAndShoot(player);
-            Fire();
+
+            if (!CheckObstaclesInMyFront())
+            {
+                animator.ResetTrigger(state);
+                state = "Fire";
+                GunPositionOnShooting();
+                // OnShootingStarted?.Invoke(this, EventArgs.Empty);
+                navMeshAgent.isStopped = true;
+                AimAndShoot(player);
+                Fire();
+            }
+            else
+            {
+                state = "stop";
+                navMeshAgent.SetDestination(player.transform.position);
+                navMeshAgent.isStopped = false;
+                BringBackWeaponToOrigingPosition();
+            }
+
         }
+
         animator.SetTrigger(state);
     }
+
+    private bool CheckObstaclesInMyFront()
+    {
+        Ray ray = new Ray(npc.transform.position, npc.transform.forward);
+        RaycastHit raycastHit;
+        return Physics.Raycast(ray, out raycastHit, maxRayDistance, Obstaclelayer);
+    }
+
     public override void Exit()
     {
         animator.ResetTrigger("Run");
@@ -90,8 +117,6 @@ public class Attacking : EnemyState,IAimAndShoot
         {
             timer = 0;
             Shoot();
-            
-
         }
         timer += Time.deltaTime;
     }

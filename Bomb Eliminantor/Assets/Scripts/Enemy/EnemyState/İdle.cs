@@ -31,7 +31,7 @@ public class İdle : EnemyState
         //}
         if (Random.Range(0,100) < 0.10f)
         {
-            new Patrolling(npc, animator, player, navMeshAgent, currentGun);
+            new Patrolling(npc, animator, player, navMeshAgent, currentGun, patrollingRunner);
         }
     
     }
