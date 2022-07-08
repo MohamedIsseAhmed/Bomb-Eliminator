@@ -45,8 +45,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int enemyColliders;
     private float distanceBetweenPlayerAndEnemy = Mathf.Infinity;
 
+    private Rigidbody rigidbody;
+    private Vector3 moveVector=Vector3.zero;
     private void Awake()
-    {   
+    {
+        rigidbody = GetComponent<Rigidbody>(); 
        gunController = GetComponent<GunController>();
        animator = GetComponent<Animator>();
        line = GetComponent<LineRenderer>();
@@ -82,48 +85,50 @@ public class PlayerController : MonoBehaviour
  
     void Update()
     {
+        
       
         if (Input.GetMouseButtonDown(0))
         {
             isAiming = false;
-           
+
             isDraging = true;
         }
         if (Input.GetButton("Fire1"))
         {
-          
+
             if (ClampJoystic.instance.CanDrag)
             {
-                HandleMovemnt();     
+                HandleMovemnt();
             }
-          
+
         }
-       
+
         if (Input.GetMouseButtonUp(0))
         {
-            isDraging=false;
+            isDraging = false;
             desiredAnimationSpeed = 0;
             animator.SetFloat("speed", desiredAnimationSpeed);
             BringBackWeaponOriginPosition();
-           
+
         }
         if (Input.GetKeyDown(KeyCode.Space))
         {
             isAiming = true;
             StartCoroutine(Aim());
-          
+
         }
         CheckEnemyAround();
-       
-    }
 
+    }
+    
     private void HandleMovemnt()
     {
        
         float horizontal = dynamicJoystick.Horizontal;
         float vertical = dynamicJoystick.Vertical;
         desiredPosition = new Vector3(horizontal * speed * Time.deltaTime, 0, vertical * speed * Time.deltaTime);
-
+        moveVector = desiredPosition;
+     
         transform.position += desiredPosition;
         desiredTurn = Vector3.forward * vertical + Vector3.right * horizontal;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredTurn), turnSpeed * Time.deltaTime);

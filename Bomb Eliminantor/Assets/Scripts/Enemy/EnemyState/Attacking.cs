@@ -79,6 +79,7 @@ public class Attacking : EnemyState,IAimAndShoot
     {
         Ray ray = new Ray(npc.transform.position, npc.transform.forward);
         RaycastHit raycastHit;
+       
         return Physics.Raycast(ray, out raycastHit, maxRayDistance, Obstaclelayer);
     }
 

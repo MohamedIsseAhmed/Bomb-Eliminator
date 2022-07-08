@@ -28,6 +28,7 @@ public class HealthSystem : MonoBehaviour,IDamagable
         if (ÝsDead())
         {
             OnDead?.Invoke(this,EventArgs.Empty);
+            EnemyCounterOnScene.instance.RemoveEnemy(gameObject);
             animator.SetTrigger("Die");           
             enabled = false;
         }

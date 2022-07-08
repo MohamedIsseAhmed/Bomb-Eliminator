@@ -46,7 +46,6 @@ public class BulletPool : MonoBehaviour
             {
                 bullets[i].gameObject.SetActive(true);
                 bullets[i].transform.position = projectileSpawnPosition.position;
-                print(projectileSpawnPosition.name);
                 bullets[i].transform.rotation = Quaternion.identity;
                 bullets[i].SetDirection(projectileSpawnPosition.forward);
                 StartCoroutine(DeActivateProjectiles(bullets[i], projectileSpawnPosition));

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd55c103455d587429012090a8d93c27, type: 3}
   m_Name: EnemyGun
   m_EditorClassIdentifier: 
-  gunPrfab: {fileID: -7449954625028234505, guid: caf702202419539469bacc322730c9b4, type: 3}
+  gunPrfab: {fileID: 3893342036914255597, guid: efad6fe939e91cd43a0c4b85ee50b2f7, type: 3}
   fireMode: 0
   burstCount: 10
   projectileSpawnPostion: {fileID: 0}

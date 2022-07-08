@@ -73,10 +73,10 @@ public class Shooting : MonoBehaviour
 
     private void Fire()
     {
-        if (timer > timerMax)
+        if (Time.time>timer)
         {
-          
-            timer = 0;
+
+            timer = Time.time + timeBetWeenShots;
             if (GetComponent<GunController>().CurrentGun.fireMode == GunScriptableObject.FireMode.Auto)
             {
                 GetTheBullet();
@@ -95,7 +95,7 @@ public class Shooting : MonoBehaviour
             }
 
         }
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
     }
     private  void GetTheBullet()
     {
@@ -107,7 +107,7 @@ public class Shooting : MonoBehaviour
         if (target != null)
         {
             
-            if (IsThereEnemy›nMyFront(target))
+            if (IsThereObstacle›nMyFront(target))
             {
                 return;
             }
@@ -140,12 +140,11 @@ public class Shooting : MonoBehaviour
 
         }
     }
-    private bool IsThereEnemy›nMyFront(Transform _targetEnemy)
+    private bool IsThereObstacle›nMyFront(Transform _targetEnemy)
     {
         targetEnemy=_targetEnemy;
         Ray ray = new Ray(transform.position + Vector3.up, (targetEnemy.position - transform.position));
         RaycastHit raycastHit;
-        Debug.DrawRay(ray.origin, ray.direction * 10, Color.red);
         return  Physics.Raycast(ray, out raycastHit, mayRayDistance, Obstaclelayer);
     }
 }

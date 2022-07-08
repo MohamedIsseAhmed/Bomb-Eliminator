@@ -10,9 +10,10 @@ public class GunController : MonoBehaviour
 
   
     private Transform currentWeapon;
-    public Transform CurrentWeapon { get { return currentWeapon; } }
+    public Transform CurrentWeapon { get { return currentWeapon; } set { currentWeapon = value; } }
     private Transform projectileSpawnPosition;
-    public Transform ProjectileSpawnPosition { get { return projectileSpawnPosition; } }
+    public Transform ProjectileSpawnPosition { get { return projectileSpawnPosition; }
+        set { projectileSpawnPosition = value; }}
     private Vector3 weaponOriginPosition;
     private Vector3 weaponOriginRotation;
     private Vector3 gunSpawnPosition= new Vector3(0.215000004f, 0.832000017f, 0.414999992f);
