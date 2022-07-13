@@ -17,9 +17,23 @@ public class BombVisual : MonoBehaviour
     [SerializeField] private Transform winParticleSpawnPosition;
     [SerializeField] private float waitTimeToDestroyParticle=2;
     public static event EventHandler OnFilledEvent;
+    private bool isBombExploded = false;
+    private void Start()
+    {
+        ExplosionTimer.OnTimeOverEvent += ExplosionTimer_OnTimeOverEvent;
+    }
+
+    private void ExplosionTimer_OnTimeOverEvent(object sender, EventArgs e)
+    {
+        isBombExploded=true;
+    }
+
     void Update()
     {
-        
+        if (isBombExploded)
+        {
+            return;
+        }
         if (isFilled) return;
         timer += Time.deltaTime;
         if (timer > timerMax )
@@ -31,6 +45,7 @@ public class BombVisual : MonoBehaviour
         }
         
         fill›mage.fillAmount = timer / timerMax;
+        fill›mage.fillAmount = Mathf.Clamp01(fill›mage.fillAmount);
 
     }
     private IEnumerator CreateWinParticle()
@@ -39,6 +54,6 @@ public class BombVisual : MonoBehaviour
         
         yield return new WaitForSeconds(waitTimeToDestroyParticle);
        
-       // Destroy(newParticle.gameObject);
+        Destroy(newParticle.gameObject);
     }
 }

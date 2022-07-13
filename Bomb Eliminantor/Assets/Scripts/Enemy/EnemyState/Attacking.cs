@@ -20,6 +20,7 @@ public class Attacking : EnemyState,IAimAndShoot
 
     private int Obstaclelayer = 1 << 7;
     private int maxRayDistance = 5;
+    private Transform projectileSpawnPosition;
     public Attacking(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) :
         base(_npc, _animator, _player, _navMeshAgent, currentGun)
     {
@@ -28,6 +29,7 @@ public class Attacking : EnemyState,IAimAndShoot
     }
     public override void Enter()
     {
+        projectileSpawnPosition = currentGun.GetComponent<Weapon>().prjectileSpawnPosition;
         weaponOrigingPosition = currentGun.localPosition;
         weaponOriginRotation = currentGun.localEulerAngles;
         animator.SetTrigger("Run");
@@ -123,6 +125,6 @@ public class Attacking : EnemyState,IAimAndShoot
     }
     private void Shoot()
     {
-        EnemyBulletPool.instance.GetBullet(currentGun);
+        EnemyBulletPool.instance.GetBullet(projectileSpawnPosition);
     }
 }

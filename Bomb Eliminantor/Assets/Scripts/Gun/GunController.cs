@@ -22,13 +22,25 @@ public class GunController : MonoBehaviour
     private Weapon weapon;
     void Awake()
     {
+        if (currentGun.canEquipLaserGun)
+        {
+            gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
+            currentWeapon = Instantiate(currentGun.LasergunPrfab.transform, gunSpawnPosition, Quaternion.Euler(gunrotaion), gunParent);
+            weapon = currentWeapon.GetComponent<Weapon>();
+            projectileSpawnPosition = weapon.prjectileSpawnPosition;
+            weaponOriginPosition = gunSpawnPosition;
+            weaponOriginRotation = gunrotaion;
+        }
+        else
+        {
+            gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
+            currentWeapon = Instantiate(currentGun.gunPrfab.transform, gunSpawnPosition, Quaternion.Euler(gunrotaion), gunParent);
+            weapon = currentWeapon.GetComponent<Weapon>();
+            projectileSpawnPosition = weapon.prjectileSpawnPosition;
+            weaponOriginPosition = gunSpawnPosition;
+            weaponOriginRotation = gunrotaion;
+        }
         
-        gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
-        currentWeapon = Instantiate(currentGun.gunPrfab.transform, gunSpawnPosition, Quaternion.Euler(gunrotaion), gunParent);
-        weapon=currentWeapon.GetComponent<Weapon>();
-        projectileSpawnPosition = weapon.prjectileSpawnPosition;
-        weaponOriginPosition = gunSpawnPosition;
-        weaponOriginRotation = gunrotaion;
     }
     //AnimationEvent
     public void BringBackWeaponOriginPosition()

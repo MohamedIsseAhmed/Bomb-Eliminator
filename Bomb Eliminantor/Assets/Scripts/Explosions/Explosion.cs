@@ -7,6 +7,7 @@ public class Explosion : MonoBehaviour
     [SerializeField] private float explosionForce = 700;
     [SerializeField] private float explosionRadius = 20;
     [SerializeField] private float sphreRadius = 20;
+    [SerializeField] private float upWardModifier = 7;
 
     [SerializeField] private GameObject expolosionParticle;
 
@@ -28,18 +29,26 @@ public class Explosion : MonoBehaviour
         Collider[] colliders = new Collider[6];
        
         int collidersNearExplosion = Physics.OverlapSphereNonAlloc(position, sphreRadius, colliders, civilLayer);
-        print(collidersNearExplosion);
+        
         for (int i = 0; i < collidersNearExplosion; i++)
         {
+            colliders[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
             colliders[i].GetComponent<Rigidbody>().AddExplosionForce(explosionForce,
-               colliders[i].transform.position + new Vector3(Random.Range(-5, 2), 0, 0), explosionRadius, 5);
+               colliders[i].transform.position + GetRandomPosition(), explosionRadius, upWardModifier);
             yield return null;
         }
-        
+
     }
+
+    private Vector3 GetRandomPosition()
+    {
+        return new Vector3(Random.Range(-5, 2), 0, 0);
+    }
+
     private IEnumerator InstantiateExplosion()
     {
         GameObject newParticle = Instantiate(expolosionParticle, expolosionPosition.position, Quaternion.identity);
+        SoundManager.instance.PlaySound(SoundManager.Sound.GameOver);
         Vector3 explosionParticlePosition = newParticle.transform.position;
         StartCoroutine(ExplosionCoroutine(explosionParticlePosition));
         yield return new WaitForSeconds(0.20f);

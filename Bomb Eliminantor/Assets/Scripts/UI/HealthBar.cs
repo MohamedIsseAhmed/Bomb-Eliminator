@@ -29,10 +29,10 @@ public class HealthBar : MonoBehaviour
        Destroy(gameObject);
     }
 
-    private void HealthSystem_OnTakeDamage(object sender, EventArgs e)
+    private void HealthSystem_OnTakeDamage(object sender, float damnage)
     {
         damageText.gameObject.SetActive(true);
-        float cutAmount = 0.1f;
+        float cutAmount =damnage/healthSystem.GetMaxHealth();
         fill›mage.fillAmount -= cutAmount;
         StartCoroutine(YellowImageDecrease());
     }

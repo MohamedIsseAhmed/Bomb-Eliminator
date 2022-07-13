@@ -6,7 +6,7 @@ using System;
 public class Enemy : MonoBehaviour
 {
 
-    //[SerializeField] private List<Transform> paths;
+   
     [SerializeField] private CrossHair crossHair;
     [SerializeField] private LayerMask obstacle;
     [SerializeField] private GunScriptableObject gunScriptableObject;
@@ -37,19 +37,9 @@ public class Enemy : MonoBehaviour
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
         currentState = new Patrolling(gameObject, animator, player, navMeshAgent, currentGun, patrollingRunner);
+        currentState.enemyType = enemyType;
         healthSystem.OnDead += HealthSystem_OnDead;
-        healthSystem.OnTakeDamage += HealthSystem_OnTakeDamage;
-      
-    }
 
-    private void HealthSystem_OnTakeDamage(object sender, EventArgs e)
-    {
-       //GeAttackStatete();
-    }
-
-    private void Attacking_OnShootingStarted(object sender, System.EventArgs e)
-    {
-        print("Enemey start"+gameObject.name);
     }
 
     private void HealthSystem_OnDead(object sender, System.EventArgs e)
@@ -58,33 +48,21 @@ public class Enemy : MonoBehaviour
         enabled = false;
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<HealthSystem>().enabled = false;
-       
- 
     }
     Attacking attacking1;
     private void OnDisable()
     {
         healthSystem.OnDead -= HealthSystem_OnDead;
-        //attacking1.OnShootingStarted -= Attacking_OnShootingStarted;
     }
-    void Update() 
+    void Update()
     {
-       
         currentState = currentState.StateProcessor();
-        
     }
-    public Transform GetWeapon()
-    {
-        return weapon;
-    }
-    public EnemyState GeAttackStatete()
-    {
-        Attacking attacking=currentState.StateProcessor() as Attacking;
-        attacking1 = attacking;
-        attacking.OnShootingStarted += Attacking_OnShootingStarted;
-        OnShootingStarted?.Invoke(this, attacking);
-        return currentState;
-    }
+    //public Transform GetWeapon()
+    //{
+    //    return weapon;
+    //}
+   
     public void ActivateCrossHair(bool is›nShhotingRange)
     {
         crossHair.ShowCrossHair(is›nShhotingRange);

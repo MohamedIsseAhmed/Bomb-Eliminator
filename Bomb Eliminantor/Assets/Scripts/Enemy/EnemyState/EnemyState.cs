@@ -48,6 +48,7 @@ public class EnemyState
         this.navMeshAgent= _navMeshAgent;
         this.currentGun = _currentGun;
         this.patrollingRunner = _patrollingRunner;
+        //this.enemyType= _enemyType;
     }
     public virtual void Enter()
     {
@@ -66,11 +67,8 @@ public class EnemyState
         Vector3 direction=player.transform.position-npc.transform.position;
         float angle = Vector3.Angle(direction, npc.transform.forward); 
         if (direction.sqrMagnitude<vissibleDistance*vissibleDistance)
-        {
-            Debug.Log("enemy canSee player now");
+        { 
             return true;
-         
-           
         }
         return false;
     }

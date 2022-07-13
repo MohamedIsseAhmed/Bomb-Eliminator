@@ -99,7 +99,7 @@ public class Shooting : MonoBehaviour
     }
     private  void GetTheBullet()
     {
-       BulletPool.instance.GetBullet(gunController.ProjectileSpawnPosition);
+       BulletPool.instance.GetBullet(currentGun.projectileSpawnPostion);
     }
     public void AimAndShoot(Transform target)
     {

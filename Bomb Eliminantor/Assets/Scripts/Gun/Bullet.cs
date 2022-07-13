@@ -8,11 +8,16 @@ public class Bullet : MonoBehaviour
     private Vector3 direction;
    
     public float timeToDisableBullet;
-    //private float bulletTimer;
-    private bool canGoFowrad=true;
-    public bool CanGoFowrad { get { return canGoFowrad; }  set { canGoFowrad = value; } }
+
+    //private bool canGoFowrad=true;
+    //public bool CanGoFowrad { get { return canGoFowrad; }  set { canGoFowrad = value; } }
 
     //private Vector3 originPosition;
+    private Rigidbody rigidbody; 
+    private void Awake()
+    {
+        rigidbody = GetComponent<Rigidbody>();
+    }
     public void SetDirection(Vector3 direction)
     {
         this.direction = direction;
@@ -21,7 +26,7 @@ public class Bullet : MonoBehaviour
     }
     void Update()
     {
-        transform.position += direction * bulletSpeed * Time.deltaTime;
+       transform.position+=direction * bulletSpeed * Time.deltaTime;
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -29,17 +34,7 @@ public class Bullet : MonoBehaviour
         if (damagable != null)
         {
             damagable.TakeDamage(10);
-            DisableBullet();
+           
         }
-        DisableBullet();
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        DisableBullet();
-    }
-   
-    public void DisableBullet()
-    {
-       gameObject.SetActive(false);   
     }
 }

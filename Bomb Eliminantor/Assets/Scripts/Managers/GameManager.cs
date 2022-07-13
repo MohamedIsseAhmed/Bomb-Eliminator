@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-   public bool ÝsGameEnded { get; private set; }
+   public bool GameOver { get; private set; }
    public bool CanShowBombVisual { get; private set; }
 
     private void Awake()
@@ -24,13 +24,21 @@ public class GameManager : MonoBehaviour
     }
     private void Start()
     {
-        EnemyCounterOnScene.instance.OnAllEnemiesDied += Ýnstance_OnAllEnemiesDied;
+        EnemyCounterOnScene.instance.OnAllEnemiesDied += OnAllEnemiesDied;
+        ExplosionTimer.OnTimeOverEvent += ExplosionTimer_OnTimeOverEvent;
     }
+
+    private void ExplosionTimer_OnTimeOverEvent(object sender, System.EventArgs e)
+    {
+        GameOver = true ;
+    }
+
     private void OnDisable()
     {
-        EnemyCounterOnScene.instance.OnAllEnemiesDied -= Ýnstance_OnAllEnemiesDied;
+        EnemyCounterOnScene.instance.OnAllEnemiesDied -= OnAllEnemiesDied;
+        ExplosionTimer.OnTimeOverEvent -= ExplosionTimer_OnTimeOverEvent;
     }
-    private void Ýnstance_OnAllEnemiesDied(object sender, System.EventArgs e)
+    private void OnAllEnemiesDied(object sender, System.EventArgs e)
     {
         CanShowBombVisual=true;
     }

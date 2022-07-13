@@ -11,7 +11,7 @@ public class EnemyBulletPool : MonoBehaviour
     [SerializeField] private int bulletPoolCount;
 
     public static EnemyBulletPool instance { get; private set; }
-    private 
+    private
     void Awake()
     {
         if (instance == null)
@@ -37,14 +37,12 @@ public class EnemyBulletPool : MonoBehaviour
     }
     public Bullet GetBullet(Transform projectileSpawnPosition)
     {
-        if (projectileSpawnPosition == null)
-        {
-            print("is is null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
+        
         for (int i = 0; i < bulletPoolCount; i++)
         {
             if (!bullets[i].gameObject.activeInHierarchy)
             {
+                
                 bullets[i].gameObject.SetActive(true);
                 bullets[i].transform.position = projectileSpawnPosition.position;
                 bullets[i].transform.rotation = Quaternion.identity;

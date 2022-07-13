@@ -11,6 +11,9 @@ public class HealthSystem : MonoBehaviour,IDamagable
     private Rigidbody rb;
     private bool isAppliedForce=false;
     private float timeToStopForce=0.15f;
+
+    public event EventHandler OnDead;
+    public event EventHandler<float> OnTakeDamage;
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -18,13 +21,12 @@ public class HealthSystem : MonoBehaviour,IDamagable
         health = maxHealth;
     }
    
-    public  event EventHandler OnDead;
-    public  event EventHandler OnTakeDamage;
+   
     public void TakeDamage(float damage)
     {
         health -= damage;
         animator.SetTrigger("TakeHit");
-        OnTakeDamage?.Invoke(this, EventArgs.Empty);
+        OnTakeDamage?.Invoke(this, damage);
         if (ÝsDead())
         {
             OnDead?.Invoke(this,EventArgs.Empty);
@@ -56,19 +58,22 @@ public class HealthSystem : MonoBehaviour,IDamagable
         rb.isKinematic = true;
        
     }
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
+    //    public class EventArgHealthAmount : EventArgs
+    //    {
+    //        private float currentHealth;
+    //        public EventArgHealthAmount(float _currentHealth)
+    //        {
+    //            currentHealth = _currentHealth;
+    //        }
+    //        public float GetHealth()
+    //        {
+    //            return currentHealth;
+    //        }
 
-//    public class EventArgHealthAmount : EventArgs
-//    {
-//        private float currentHealth;
-//        public EventArgHealthAmount(float _currentHealth)
-//        {
-//            currentHealth = _currentHealth;
-//        }
-//        public float GetHealth()
-//        {
-//            return currentHealth;
-//        }
-
-//    }
-//}
+    //    }
+    //}
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletPool : MonoBehaviour
+public class BulletPool :MonoBehaviour
 {
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform poolBulletParent;
@@ -13,14 +13,13 @@ public class BulletPool : MonoBehaviour
     public static BulletPool instance { get; private set; }
     void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
-       
         bullets = new List<Bullet>();
-       
     }
+
     private void Start()
     {
         CreateBulletPool();
@@ -34,9 +33,9 @@ public class BulletPool : MonoBehaviour
             bullets.Add(bullet);
         }
     }
-    public Bullet GetBullet(Transform projectileSpawnPosition )
+    public Bullet GetBullet(Transform projectileSpawnPosition)
     {
-        if(projectileSpawnPosition == null)
+        if (projectileSpawnPosition == null)
         {
             print("is is null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
@@ -54,7 +53,8 @@ public class BulletPool : MonoBehaviour
         }
         return null;
     }
-    IEnumerator DeActivateProjectiles(Bullet bullet,Transform projectileSpawnPosition)
+ 
+    IEnumerator DeActivateProjectiles(Bullet bullet, Transform projectileSpawnPosition)
     {
         yield return new WaitForSeconds(timeAfterToActivatePooledObjects);
         bullet.transform.position = projectileSpawnPosition.position;

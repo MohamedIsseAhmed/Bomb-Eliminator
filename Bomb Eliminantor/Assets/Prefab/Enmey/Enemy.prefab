@@ -936,7 +936,6 @@ GameObject:
   - component: {fileID: 7897939644750027573}
   - component: {fileID: 4286075096704024909}
   - component: {fileID: 4286075096704024908}
-  - component: {fileID: 1399407666224786815}
   - component: {fileID: 4286075096704024883}
   - component: {fileID: 4286075096704024880}
   - component: {fileID: 4286075096704024881}
@@ -1028,23 +1027,9 @@ MonoBehaviour:
   obstacle:
     serializedVersion: 2
     m_Bits: 128
-  gunScriptableObject: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
+  gunScriptableObject: {fileID: 11400000, guid: 54fb83b82e59b774ebec88fe070cf3f4, type: 2}
   sphere: {fileID: 0}
   enemyType: 0
---- !u!114 &1399407666224786815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3472524056153119733}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4f00a48b488da142bdd68a8137fbfb9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyType: 0
-  enemyShooterType: 0
 --- !u!136 &4286075096704024883
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1073,8 +1058,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
-  m_CollisionDetection: 3
+  m_Constraints: 116
+  m_CollisionDetection: 1
 --- !u!114 &4286075096704024881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1087,7 +1072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b118c92be242abf4ab60ed3f6499965f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 50
+  maxHealth: 100
   force: 10
 --- !u!114 &4670111105147202891
 MonoBehaviour:
@@ -1115,7 +1100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2e6ad0dfbc1af541bcd16e2ec996c1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paths: []
+  paths:
+  - {fileID: 0}
+  - {fileID: 0}
   pathTag: 
 --- !u!1 &3631072982930696482
 GameObject:
@@ -1269,7 +1256,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4002528940886171736}
   m_LocalRotation: {x: -0.0019196807, y: -0.00011617376, z: -0.023234872, w: 0.9997282}
-  m_LocalPosition: {x: -0.014282306, y: 1.3939656, z: -0.04366059}
+  m_LocalPosition: {x: -0.014281159, y: 1.3939656, z: -0.043659728}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

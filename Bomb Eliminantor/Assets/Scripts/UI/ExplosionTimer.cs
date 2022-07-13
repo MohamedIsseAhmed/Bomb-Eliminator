@@ -8,25 +8,34 @@ public class ExplosionTimer : MonoBehaviour
 {
     [SerializeField] private Image explosionFillÝmage;
     [SerializeField] private float explosionTimerMax = 3;
-    
-   
+
     [SerializeField] private TextMeshProUGUI expolosionText;
+    [SerializeField] private TextMeshProUGUI secondsText;
+    [SerializeField] private string secondsColorHex;
 
     private float explosionTime;
     private bool timeFilled;
     public static event EventHandler OnTimeOverEvent;
+    private bool isPlayerEliminatedBomb;
     private void Start()
     {
         StartCoroutine(ExplosionCoroutine());
+        BombVisual.OnFilledEvent += BombVisual_OnFilledEvent;
     }
-  
+
+    private void BombVisual_OnFilledEvent(object sender, EventArgs e)
+    {
+        isPlayerEliminatedBomb = true;
+    }
+
     IEnumerator ExplosionCoroutine()
     {
-        while (!timeFilled)
+        while (!timeFilled && !isPlayerEliminatedBomb)
         {
             explosionTime += Time.deltaTime;
             explosionFillÝmage.fillAmount = explosionTime / explosionTimerMax;
-            expolosionText.text = "Explosion in 10 S" + explosionTime.ToString("F1");
+            secondsText.text = (explosionTimerMax- explosionTime).ToString("F0");
+            expolosionText.text = "EXPOLOSÝON ÝN " + secondsText.text + " S" ;
             if (explosionTime >= explosionTimerMax)
             {
              

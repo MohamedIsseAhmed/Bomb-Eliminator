@@ -60,8 +60,10 @@ public class PlayerController : MonoBehaviour
         line.positionCount = segmentsOfLineRenderer + 1;
         line.useWorldSpace = false;
         CreateCircle();
-
+        
     }
+
+
     void CreateCircle()
     {
         float x;
@@ -85,8 +87,11 @@ public class PlayerController : MonoBehaviour
  
     void Update()
     {
-        
-      
+
+        if (GameManager.instance.GameOver) 
+        {
+            return; 
+        }
         if (Input.GetMouseButtonDown(0))
         {
             isAiming = false;
@@ -131,7 +136,8 @@ public class PlayerController : MonoBehaviour
      
         transform.position += desiredPosition;
         desiredTurn = Vector3.forward * vertical + Vector3.right * horizontal;
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredTurn), turnSpeed * Time.deltaTime);
+        if(desiredTurn!=Vector3.zero)
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(desiredTurn), turnSpeed * Time.deltaTime);
         if (desiredPosition.magnitude > 0)
         {
             desiredAnimationSpeed= 1;

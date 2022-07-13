@@ -11,23 +11,23 @@ public class EnemyShooting : MonoBehaviour
         WithSword
     }
     [SerializeField] private EnemyShooterType enemyShooterType;
-    Enemy enemy;
-    private Transform target;
-    private float timer;
-    private float timerMax;
+    //Enemy enemy;
+    //private Transform target;
+    //private float timer;
+    //private float timerMax;
 
     private GunController gunController;
     private void Awake()
     {
         gunController = GetComponent<GunController>();  
-        timerMax = 1f;
-        enemy = GetComponent<Enemy>();
+        //timerMax = 1f;
+        //enemy = GetComponent<Enemy>();
     }
     void Start()
     {
         //Attacking attacking = new Attacking();
         //attacking.OnShootingStarted += Attacking_OnShootingStarted;
-        enemy.OnShootingStarted += Enemy_OnShootingStarted1;
+       // enemy.OnShootingStarted += Enemy_OnShootingStarted1;
     }
     Attacking attacking;
     Transform targetPlayer;

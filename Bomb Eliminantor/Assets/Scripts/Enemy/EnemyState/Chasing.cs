@@ -10,6 +10,7 @@ public class Chasing : EnemyState
     {
         stateName = State.Chasing;
         enemyType = EnemyType.Patroller;
+        navMeshAgent.isStopped = false;
     }
     public override void Enter()
     {
@@ -32,7 +33,7 @@ public class Chasing : EnemyState
     }
     public override void Exit()
     {
-        animator.ResetTrigger("walk");
+        animator.ResetTrigger("Run");
         base.Exit();
     }
     private void WeaponPositionOnRunning()

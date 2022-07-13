@@ -6,10 +6,7 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] GunScriptableObject currentGun;
     public Transform prjectileSpawnPosition;
-    private void Awake()
-    {
-
-    }
+    
     private void Start()
     {
         currentGun.projectileSpawnPostion = prjectileSpawnPosition;
