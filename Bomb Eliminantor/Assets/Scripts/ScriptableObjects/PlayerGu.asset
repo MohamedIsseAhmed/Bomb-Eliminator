@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: PlayerGu
   m_EditorClassIdentifier: 
   characterEquipedThiGun: 0
+  weaponType: 0
   gunPrfab: {fileID: 3893342036914255597, guid: efad6fe939e91cd43a0c4b85ee50b2f7, type: 3}
-  LasergunPrfab: {fileID: -7449954625028234505, guid: caf702202419539469bacc322730c9b4, type: 3}
+  lasergunPrfab: {fileID: -7449954625028234505, guid: caf702202419539469bacc322730c9b4, type: 3}
   fireMode: 0
   burstCount: 10
-  projectileSpawnPostion: {fileID: 0}
-  canEquipLaserGun: 1
+  projectileSpawnPostion: {fileID: 4932081805410622050, guid: efad6fe939e91cd43a0c4b85ee50b2f7, type: 3}
+  canEquipLaserGun: 0

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -13,22 +12,21 @@ public class WinPanel : MonoBehaviour
     [SerializeField] private float tweenTime = 2f;
     [SerializeField] private float waiteTime = 2f;
     [SerializeField] private float scaleTweenTime = 2f;
-
+    [SerializeField] private float tweenXTarget = -308f;
     [SerializeField] private Button doubleButton;
-
-    [SerializeField] Ease ease;
-
  
     [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject backGround;
     [SerializeField] private GameObject claimButton;
-
     
-   [SerializeField] private EquipGunTimer equipGunTimer;
+    [SerializeField] private EquipGunTimer equipGunTimer;
 
-    public event EventHandler ShowDmiondEvent;
-    private Tween tween;
+    public event EventHandler<DimondCountNumberEventArgs> ShowDmiondEvent;
 
+    [SerializeField] Ease ease;
+    private Tween chancetween;
+    private Tween winPaneltween;
+    private Tween claimButtonScaleTween;
     
     [SerializeField] private float X2Min = -164f, X2Max = -100f;
     [SerializeField] private float X3Min = -100f, X3Max = -36f;
@@ -37,18 +35,20 @@ public class WinPanel : MonoBehaviour
     [SerializeField] private float X32Min = 190f, X32Max = 240f;
     [SerializeField] private float X22Min = 105f, X22Max = 190f;
 
+    [SerializeField] private TextMeshProUGUI dimondMultiplyText;
+    [SerializeField] private TextMeshProUGUI levelText;
     void Start()
     {
-        tween = chance›ndictor.rectTransform.DOLocalMoveX(-164, tweenTime, false).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
+        chancetween = chance›ndictor.rectTransform.DOLocalMoveX(tweenXTarget, tweenTime, false).SetEase(ease).SetLoops(-1, LoopType.Yoyo);
         claimButton.GetComponent<Button>().onClick.AddListener(RewardWithDimond);
         equipGunTimer.OnShowWinPanelEvent += EquipGunTimer_ShowWinPanelEvent;
     }
-
+  
     private void EquipGunTimer_ShowWinPanelEvent(object sender, EventArgs e)
     {
         StartCoroutine(EnableWinPane()); ;
     }
-
+  
    
     IEnumerator EnableWinPane()
     {
@@ -59,46 +59,77 @@ public class WinPanel : MonoBehaviour
         claimButton.SetActive(false);
         yield return new WaitForSeconds(waiteTime);
         winPanel.GetComponent<RectTransform>().DOScale(Vector3.one, scaleTweenTime);
+        levelText.text="LEVEL "+PlayerPrefs.GetInt("currentLevel").ToString();
         yield return new WaitForSeconds(waiteTime * 3);
         claimButton.SetActive(true);
         claimButton.GetComponent<RectTransform>().DOScale(Vector3.one, waiteTime / 2);
+        yield return new WaitForSeconds(waiteTime);
+        
     }
   
     public void RewardWithDimond()
     {
-        ShowDmiondEvent?.Invoke(this, EventArgs.Empty);
+        ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(1));
+        doubleButton.GetComponent<Button>().interactable = false;
+        claimButton.GetComponent<Button>().interactable = false;
+        chancetween.Kill();
+        LevelManager.instance.WaitTimeRToLoadNextScene = 3;
     }
 
    
     public void UserClickedDoubleButton()
     {
-        tween.Kill();
-       
+        chancetween.Kill();
+        //winPaneltween.Kill();
+        //claimButtonScaleTween.Kill();
+
         float x = chance›ndictor.rectTransform.anchoredPosition.x;
         if(ValidateRange(X2Min, X2Max, x))
         {
-            print("X2");
+          
+            dimondMultiplyText.text = "X2";
+            ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(2));
+            claimButton.GetComponent<Button>().interactable = false;
+
+
         }
         else if(ValidateRange( X3Min, X3Max, x))
         {
-            print("X3");
+            dimondMultiplyText.text = "X3";
+            ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(3));
+            claimButton.GetComponent<Button>().interactable = false;
         }
         else if (ValidateRange(X4Min,X4Max, x))
         {
-            print("X4");
+            dimondMultiplyText.text = "X4";
+            ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(4));
+            claimButton.GetComponent<Button>().interactable = false;
         }
         else if (ValidateRange(X5Min, X5Max, x))
         {
-            print("X5");
+            dimondMultiplyText.text = "X5";
+            ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(5));
+            claimButton.GetComponent<Button>().interactable = false;
         }
         else if (ValidateRange(X32Min, X32Max, x))
         {
-            print("X33");
+            dimondMultiplyText.text = "X3";
+            ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(3));
+            claimButton.GetComponent<Button>().interactable = false;
         }
         else if (ValidateRange(X22Min, X22Max, x))
         {
-            print("X22");
+            dimondMultiplyText.text = "X2";
+            ShowDmiondEvent?.Invoke(this, new DimondCountNumberEventArgs(2));
+            claimButton.GetComponent<Button>().interactable = false;
         }
+    }
+    private void OnDisable()
+    {
+        chancetween.Kill();
+        //winPaneltween.Kill();
+        //claimButtonScaleTween.Kill();
+        equipGunTimer.OnShowWinPanelEvent -= EquipGunTimer_ShowWinPanelEvent;
     }
     private bool ValidateRange(float min , float max, float value)
     {
@@ -111,9 +142,16 @@ public class WinPanel : MonoBehaviour
         }
         else if (value >min && value< max)
         {
-
             return true;
         }
         return false ;   
+    }
+    public class DimondCountNumberEventArgs : EventArgs
+    {
+        public int numberOfDimondsToReward;
+        public DimondCountNumberEventArgs(int _numberOfDimondsToReward)
+        {
+            this.numberOfDimondsToReward = _numberOfDimondsToReward;
+        }
     }
 }

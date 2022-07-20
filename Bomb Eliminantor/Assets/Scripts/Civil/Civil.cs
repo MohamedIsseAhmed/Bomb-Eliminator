@@ -5,19 +5,19 @@ using UnityEngine;
 public class Civil : MonoBehaviour
 {
     private Animator animator;
-    
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
-
+   
     private void Start()
     {
+        animator = GetComponent<Animator>();
         BombVisual.OnFilledEvent += BombVisual_OnFilledEvent;
     }
 
     private void BombVisual_OnFilledEvent(object sender, System.EventArgs e)
     {
         animator.SetTrigger("Victory");
+    }
+    private void OnDisable()
+    {
+        BombVisual.OnFilledEvent -= BombVisual_OnFilledEvent;
     }
 }

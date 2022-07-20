@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
+using System;
 
 public class Shooting : MonoBehaviour
 {
-    public enum GunType
-    {
-        StandardGun,
-        LazerGun
-    }
-    [SerializeField] private GunType gunType;
+   
     [SerializeField] private float burstCount;
-    [SerializeField] GunScriptableObject currentGun;
+    private GunScriptableObject currentGun;
     [SerializeField] private float sphereRadius;
     [SerializeField] private float shootingDistanceRange=10;
     [SerializeField] private LayerMask enemyLayerMaks;
@@ -22,44 +17,36 @@ public class Shooting : MonoBehaviour
     private Transform targetEnemy;
     private Animator animator;
     private PlayerController playerController;
-
-    int shotsRemainingInBurst;
-    private bool hasTarget;
     [SerializeField] private float timeBetWeenShots;
     private GunController gunController;
 
     private HealthSystem healthSystem;
     private int Obstaclelayer = 1 << 7;
     private int mayRayDistance = 10;
+    private float timeBetweenShotsWithLaserGun = 0.15f;
+    private float timeBetweenShotsWithNormalGun = 0.20f;
+    public static event EventHandler EventHandlerOnPlayerDied;
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
         gunController = GetComponent<GunController>();
-        if (gunType == GunType.StandardGun)
+        currentGun = gunController.CurrentGun;
+        if (currentGun.weaponType== GunScriptableObject.WeaponType.NormalGun)
         {
-            //timeBetWeenShots = 0.2f;
+            timeBetWeenShots = timeBetweenShotsWithNormalGun;
         }
-        else if(gunType == GunType.LazerGun)
+        else if (currentGun.weaponType == GunScriptableObject.WeaponType.LaserGun)
         {
-            //timeBetWeenShots = 0.3f;
+            timeBetWeenShots = timeBetweenShotsWithLaserGun;
         }
         timerMax = timeBetWeenShots;
         animator = GetComponent<Animator>();
         playerController = GetComponent<PlayerController>();
-
-        //shootingDistanceRange = GetComponent<GunController>().CurrentGun.burstCount;
-        burstCount = currentGun.burstCount;
     }
  
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
-        {
-            if(burstCount!=currentGun.burstCount)
-               burstCount=currentGun.burstCount;
-        }
         AimAndShoot(targetEnemy);
- 
     }
     private void OnEnable()
     {
@@ -68,7 +55,15 @@ public class Shooting : MonoBehaviour
 
     private void HealthSystem_OnDead(object sender, System.EventArgs e)
     {
+        targetEnemy = null;
         SoundManager.instance.PlaySound(SoundManager.Sound.GameOver);
+        GetComponent<PlayerController>().enabled = false;
+        enabled = false;
+        GetComponent<GunController>().enabled = false;
+        GetComponent<CapsuleCollider>().enabled = false;
+        GameManager.instance.GameOver = true;
+        EventHandlerOnPlayerDied?.Invoke(this, EventArgs.Empty);
+
     }
 
     private void Fire()
@@ -77,29 +72,17 @@ public class Shooting : MonoBehaviour
         {
 
             timer = Time.time + timeBetWeenShots;
-            if (GetComponent<GunController>().CurrentGun.fireMode == GunScriptableObject.FireMode.Auto)
-            {
-                GetTheBullet();
-                SoundManager.instance.PlaySound(SoundManager.Sound.NormalBullet1);
-            }
-            else if (GetComponent<GunController>().CurrentGun.fireMode == GunScriptableObject.FireMode.Burst)
-            {
-                if (shootingDistanceRange == 0)
-                {
-                    burstCount = currentGun.burstCount;
-                }
-                SoundManager.instance.PlaySound(SoundManager.Sound.NormalBullet1);
-                GetTheBullet();
-
-                shootingDistanceRange--;
-            }
+            GetTheBullet();
+            SoundManager.instance.PlaySound(SoundManager.Sound.NormalBullet1);
+           
 
         }
-        //timer += Time.deltaTime;
+      
     }
+   
     private  void GetTheBullet()
     {
-       BulletPool.instance.GetBullet(currentGun.projectileSpawnPostion);
+       BulletPool.instance.GetBullet(gunController.ProjectileSpawnPosition);
     }
     public void AimAndShoot(Transform target)
     {

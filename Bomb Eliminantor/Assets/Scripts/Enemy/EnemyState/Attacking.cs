@@ -42,7 +42,7 @@ public class Attacking : EnemyState,IAimAndShoot
         directionToPlayer = player.transform.position - npc.transform.position;
         Quaternion lookDirection = Quaternion.LookRotation(directionToPlayer);
         npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookDirection, turnSpeed * Time.deltaTime);
-
+       
         if (Vector3.Distance(player.transform.position, navMeshAgent.transform.position) > distanceToTarget)
         {
 
@@ -59,10 +59,14 @@ public class Attacking : EnemyState,IAimAndShoot
                 animator.ResetTrigger(state);
                 state = "Fire";
                 GunPositionOnShooting();
-                // OnShootingStarted?.Invoke(this, EventArgs.Empty);
                 navMeshAgent.isStopped = true;
                 AimAndShoot(player);
                 Fire();
+                if (player.GetComponent<HealthSystem>().ÝsDead())
+                {
+                    nextState = new Ýdle(npc, animator, player, navMeshAgent, currentGun, patrollingRunner);
+                    eventStages = EventStages.Exit;
+                }
             }
             else
             {
@@ -79,7 +83,7 @@ public class Attacking : EnemyState,IAimAndShoot
 
     private bool CheckObstaclesInMyFront()
     {
-        Ray ray = new Ray(npc.transform.position, npc.transform.forward);
+        Ray ray = new Ray(npc.transform.position, player.transform.position-npc.transform.position);
         RaycastHit raycastHit;
        
         return Physics.Raycast(ray, out raycastHit, maxRayDistance, Obstaclelayer);
@@ -88,7 +92,7 @@ public class Attacking : EnemyState,IAimAndShoot
     public override void Exit()
     {
         animator.ResetTrigger("Run");
-        navMeshAgent.isStopped=false;
+       
         base.Exit();
     }
     private void GunPositionOnShooting()
@@ -127,4 +131,5 @@ public class Attacking : EnemyState,IAimAndShoot
     {
         EnemyBulletPool.instance.GetBullet(projectileSpawnPosition);
     }
+   
 }

@@ -39,7 +39,10 @@ public class Explosion : MonoBehaviour
         }
 
     }
-
+    private void OnDisable()
+    {
+        ExplosionTimer.OnTimeOverEvent -= ExplosionTimer_OnTimeOverEvent;
+    }
     private Vector3 GetRandomPosition()
     {
         return new Vector3(Random.Range(-5, 2), 0, 0);

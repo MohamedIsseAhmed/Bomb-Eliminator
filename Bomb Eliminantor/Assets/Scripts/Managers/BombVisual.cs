@@ -48,6 +48,10 @@ public class BombVisual : MonoBehaviour
         fill›mage.fillAmount = Mathf.Clamp01(fill›mage.fillAmount);
 
     }
+    private void OnDisable()
+    {
+        ExplosionTimer.OnTimeOverEvent -= ExplosionTimer_OnTimeOverEvent;
+    }
     private IEnumerator CreateWinParticle()
     {
         Transform newParticle = Instantiate(winParticlePrefab.transform, winParticleSpawnPosition.position, Quaternion.identity);

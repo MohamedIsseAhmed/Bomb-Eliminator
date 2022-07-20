@@ -5,26 +5,38 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "GunScriptableObject/GunType")]
 public class GunScriptableObject : ScriptableObject
 {
+    public enum WeaponType
+    {
+        LaserGun,
+        NormalGun
+    }
     public enum CharacterEquipedThiGun
     {
         Player,
         Enemy
     }
     public CharacterEquipedThiGun characterEquipedThiGun;
+    public WeaponType weaponType;
     public Weapon gunPrfab;
-    public Weapon LasergunPrfab;
+    public Weapon lasergunPrfab;
     public enum FireMode { Auto,Burst}
     public FireMode fireMode;
     public int burstCount;
-    public Transform projectileSpawnPostion;
+
     public bool canEquipLaserGun;
-    private void Awake()
-    {
-        projectileSpawnPostion = gunPrfab.prjectileSpawnPosition;
-    }
+   
     private void OnEnable()
     {
+        LevelManager.UnEquipLaserGun += Ýnstance_UnEquipLaserGun;
         EquipGunTimer.OnChangeGunEvent += EquipGunTimer_OnChangeGunEvent;
+    }
+
+    private void Ýnstance_UnEquipLaserGun(object sender, System.EventArgs e)
+    {
+        if (characterEquipedThiGun == CharacterEquipedThiGun.Player)
+        {
+            canEquipLaserGun = false;
+        }
     }
 
     private void EquipGunTimer_OnChangeGunEvent(object sender, System.EventArgs e)
@@ -36,6 +48,7 @@ public class GunScriptableObject : ScriptableObject
     }
     private void OnDisable()
     {
+        LevelManager.UnEquipLaserGun -= Ýnstance_UnEquipLaserGun;
         EquipGunTimer.OnChangeGunEvent -= EquipGunTimer_OnChangeGunEvent;
     }
 }

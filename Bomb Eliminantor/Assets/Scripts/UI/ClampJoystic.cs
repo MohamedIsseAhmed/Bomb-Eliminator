@@ -13,8 +13,11 @@ public class ClampJoystic : MonoBehaviour
     private RectTransform rectTransform;
     private Vector2 anchoredPosition;
 
-    private float maxXScreen = 1920f;
-    private float maxYScreen = 1820;
+    [SerializeField] private float maxXScreen = 1920f;
+    [SerializeField] private float maxYScreen = 1820;
+    [SerializeField] private float minYClampScreen = 100;
+    [SerializeField] private float maxYClampScreen = 1820;
+    
     private void Awake()
     {
         instance = this;
@@ -23,28 +26,30 @@ public class ClampJoystic : MonoBehaviour
   
     void Update()
     {
-       
-        if(Input.mousePosition.x> Screen.width- xPixel )
+
+        if (Input.mousePosition.x > Screen.width - xPixel)
         {
-            HandleJosytickOutOfScreen(maxXScreen, true);
+            float v = Input.mousePosition.x - (Screen.width - xPixel);
+            print(v);
+            HandleJosytickOutOfScreen(Input.mousePosition.x, true, Input.mousePosition.y);
         }
-        else if(Input.mousePosition.x < xPixel)
-        {
-            HandleJosytickOutOfScreen(xPixel, true);
-        }
-        else if(Input.mousePosition.y > Screen.height- yPixel )
-        {
-            HandleJosytickOutOfScreen(rectTransform.anchoredPosition.x, false,maxYScreen);
-        }
-        else if (Input.mousePosition.y < yPixel)
-        {
-            HandleJosytickOutOfScreen(rectTransform.anchoredPosition.x, false, yPixel);
-        }
+        //else if (Input.mousePosition.x < xPixel)
+        //{
+        //    HandleJosytickOutOfScreen(xPixel, true);
+        //}
+        //else if (Input.mousePosition.y > Screen.height - yPixel)
+        //{
+        //    HandleJosytickOutOfScreen(rectTransform.anchoredPosition.x, false, maxYScreen);
+        //}
+        //else if (Input.mousePosition.y < yPixel)
+        //{
+        //    HandleJosytickOutOfScreen(rectTransform.anchoredPosition.x, false, yPixel);
+        //}
         else
         {
             canDrag = true;
         }
-       
+        
     }
 
     private float ClampValues(float value, float a,float b)
@@ -54,17 +59,20 @@ public class ClampJoystic : MonoBehaviour
     private void HandleJosytickOutOfScreen(float x,bool isClampedY, float y = 0)
     {
         anchoredPosition=rectTransform.anchoredPosition;
-        if (isClampedY)
-        {
-            anchoredPosition.x = x;
-            anchoredPosition.y = ClampValues(anchoredPosition.y, 100, 1800);
-        }
-        else
-        {
-            anchoredPosition.x = x;
-            anchoredPosition.y = y;
+        //if (isClampedY)
+        //{
+        //    anchoredPosition.x = x;
+        //    anchoredPosition.y = ClampValues(anchoredPosition.y, minYClampScreen, maxYClampScreen);
+        //}
+        //else
+        //{
+        //    anchoredPosition.x = x;
+        //    anchoredPosition.y = y;
             
-        }
+        //}
+        anchoredPosition.x = x;
+        anchoredPosition.y = y;
+
         rectTransform.anchoredPosition=anchoredPosition;
     }
 }

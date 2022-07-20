@@ -23,6 +23,8 @@ public class ExplosionTimer : MonoBehaviour
         BombVisual.OnFilledEvent += BombVisual_OnFilledEvent;
     }
 
+    
+
     private void BombVisual_OnFilledEvent(object sender, EventArgs e)
     {
         isPlayerEliminatedBomb = true;
@@ -32,6 +34,10 @@ public class ExplosionTimer : MonoBehaviour
     {
         while (!timeFilled && !isPlayerEliminatedBomb)
         {
+            if (GameManager.instance.GameOver)
+            {
+                yield break;
+            }
             explosionTime += Time.deltaTime;
             explosionFill›mage.fillAmount = explosionTime / explosionTimerMax;
             secondsText.text = (explosionTimerMax- explosionTime).ToString("F0");
@@ -46,5 +52,8 @@ public class ExplosionTimer : MonoBehaviour
             yield return null;
         }
     }
- 
+    private void OnDisable()
+    {
+        BombVisual.OnFilledEvent -= BombVisual_OnFilledEvent;
+    }
 }

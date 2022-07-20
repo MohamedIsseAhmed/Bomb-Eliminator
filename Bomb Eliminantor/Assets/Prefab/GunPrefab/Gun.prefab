@@ -51,7 +51,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bff0b1b655482140b0f09bc6f9abab9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentGun: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
+  weaponType: 1
+  LaserGun: {fileID: 11400000, guid: 09affb2716c31fd4586ceff63c16856c, type: 2}
+  NormalGun: {fileID: 11400000, guid: 54fb83b82e59b774ebec88fe070cf3f4, type: 2}
   prjectileSpawnPosition: {fileID: 4932081805410622050}
 --- !u!1 &5384458836496412265
 GameObject:

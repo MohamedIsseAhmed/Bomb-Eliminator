@@ -35,10 +35,7 @@ public class BulletPool :MonoBehaviour
     }
     public Bullet GetBullet(Transform projectileSpawnPosition)
     {
-        if (projectileSpawnPosition == null)
-        {
-            print("is is null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        }
+       
         for (int i = 0; i < bulletPoolCount; i++)
         {
             if (!bullets[i].gameObject.activeInHierarchy)

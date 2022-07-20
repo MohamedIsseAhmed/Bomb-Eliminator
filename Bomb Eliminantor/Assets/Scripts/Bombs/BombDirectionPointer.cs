@@ -21,7 +21,7 @@ public class BombDirectionPointer : MonoBehaviour
     private void Bomb_StopBombPointerAnimation(object sender, System.EventArgs e)
     {
         bombDirectionPointer.gameObject.SetActive(false);
-        bombDirectionPointerTween.Kill();
+       
     }
 
     private void OnAllEnemiesDied(object sender, System.EventArgs e)
@@ -31,6 +31,7 @@ public class BombDirectionPointer : MonoBehaviour
     }
     private void OnDisable()
     {
+        bombDirectionPointerTween.Kill();
         EnemyCounterOnScene.instance.OnAllEnemiesDied -= OnAllEnemiesDied;
         Bomb.StopBombPointerAnimation -= Bomb_StopBombPointerAnimation;
     }

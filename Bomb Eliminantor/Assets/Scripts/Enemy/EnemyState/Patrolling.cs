@@ -17,15 +17,26 @@ public class Patrolling : EnemyState
    private int current›ndex;
    private Vector3 currentWaypoint = Vector3.zero;
    private int pathCount = 0;
-    private float dotvisibleAngle=15f;
+   private float dotvisibleAngle=15f;
+   private HealthSystem healthSystem;
+    private bool ShoulchangeStateToChasing;
    public override void Enter()
     {
+        ShoulchangeStateToChasing = false;
         animator.SetTrigger("walk");
         current›ndex = 0;
         base.Enter();
         currentWaypoint = patrollingRunner.GetPathsList()[current›ndex].position;
         pathCount = patrollingRunner.GetPathsList().Count;
+        healthSystem=npc.GetComponent<HealthSystem>();
+        healthSystem.OnTakeDamage += HealthSystem_OnTakeDamage;
     }
+
+    private void HealthSystem_OnTakeDamage(object sender, float e)
+    {
+        ShoulchangeStateToChasing = true;
+    }
+
     public override void Update()
     {
         if (enemyType == EnemyType.Patroller)
@@ -58,23 +69,24 @@ public class Patrolling : EnemyState
                 navMeshAgent.SetDestination(currentWaypoint);
               
             }
-            if (GameManager.instance.GameOver)
-            {
-               
-                nextState = new ›dle(npc, animator, player, navMeshAgent, currentGun,patrollingRunner);
-                
-                eventStages = EventStages.Exit;
-            }
+            
         }
         else if(enemyType == EnemyType.›dle)
         {
             nextState = new ›dle(npc, animator, player, navMeshAgent, currentGun,patrollingRunner);
             eventStages = EventStages.Exit;
         }
+        if (ShoulchangeStateToChasing)
+        {
+            nextState = new Attacking(npc, animator, player, navMeshAgent, currentGun);
+            eventStages = EventStages.Exit;
+        }
     }
+
     public override void Exit()
     {
         animator.ResetTrigger("walk");
+        healthSystem.OnTakeDamage -= HealthSystem_OnTakeDamage;
         base.Exit();
     }
    

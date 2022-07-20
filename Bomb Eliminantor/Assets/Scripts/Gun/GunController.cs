@@ -11,7 +11,7 @@ public class GunController : MonoBehaviour
   
     private Transform currentWeapon;
     public Transform CurrentWeapon { get { return currentWeapon; } set { currentWeapon = value; } }
-    private Transform projectileSpawnPosition;
+    [SerializeField] private Transform projectileSpawnPosition;
     public Transform ProjectileSpawnPosition { get { return projectileSpawnPosition; }
         set { projectileSpawnPosition = value; }}
     private Vector3 weaponOriginPosition;
@@ -25,7 +25,7 @@ public class GunController : MonoBehaviour
         if (currentGun.canEquipLaserGun)
         {
             gunrotaion = new Vector3(319.814056f, 6.36982012f, 81.3262711f);
-            currentWeapon = Instantiate(currentGun.LasergunPrfab.transform, gunSpawnPosition, Quaternion.Euler(gunrotaion), gunParent);
+            currentWeapon = Instantiate(currentGun.lasergunPrfab.transform, gunSpawnPosition, Quaternion.Euler(gunrotaion), gunParent);
             weapon = currentWeapon.GetComponent<Weapon>();
             projectileSpawnPosition = weapon.prjectileSpawnPosition;
             weaponOriginPosition = gunSpawnPosition;
@@ -40,6 +40,7 @@ public class GunController : MonoBehaviour
             weaponOriginPosition = gunSpawnPosition;
             weaponOriginRotation = gunrotaion;
         }
+       
         
     }
     //AnimationEvent

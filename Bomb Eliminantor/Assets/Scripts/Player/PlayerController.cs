@@ -103,9 +103,9 @@ public class PlayerController : MonoBehaviour
 
             if (ClampJoystic.instance.CanDrag)
             {
-                HandleMovemnt();
+                
             }
-
+            HandleMovemnt();
         }
 
         if (Input.GetMouseButtonUp(0))

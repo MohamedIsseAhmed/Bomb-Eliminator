@@ -20,6 +20,7 @@ public class EquipGunTimer : MonoBehaviour
 
     public event EventHandler OnShowWinPanelEvent;
     public static event  EventHandler OnChangeGunEvent;
+    private Tween gunEquipTween;
     private void Awake()
     {
       
@@ -31,9 +32,9 @@ public class EquipGunTimer : MonoBehaviour
     }
     private void Start()
     {
-        BombVisual.OnFilledEvent += BombVisual_OnFilledEvent; ;
+        BombVisual.OnFilledEvent += BombVisual_OnFilledEvent;
     }
-
+   
     private void BombVisual_OnFilledEvent(object sender, System.EventArgs e)
     {
         if (!isEquiped)
@@ -50,24 +51,30 @@ public class EquipGunTimer : MonoBehaviour
     {
         gunEquipTimer.SetActive(true);
         gunEquipTimer.transform.localScale = Vector3.zero;
-        gunEquipTimer.GetComponent<RectTransform>().DOScale(Vector3.one, scaleTweenTime);
+        gunEquipTween= gunEquipTimer.GetComponent<RectTransform>().DOScale(Vector3.one, scaleTweenTime);
 
         percentPerLevel += 0.25f;
         percentPerLevel = Mathf.Clamp01(percentPerLevel);
         equipTimePercentText.text = "%" + percentPerLevel.ToString();
 
         PlayerPrefs.SetFloat("percentPerLevel", percentPerLevel);
-        print(PlayerPrefs.GetFloat("percentPerLevel"));
+        
 
         yield return StartCoroutine(FillDiscover›mage());
         yield return new WaitForSeconds(2);
         gunEquipTimer.SetActive(false);
         OnShowWinPanelEvent?.Invoke(this, EventArgs.Empty);
     }
+   
+    private void OnDisable()
+    {
+        BombVisual.OnFilledEvent -= BombVisual_OnFilledEvent;
+        gunEquipTween.Kill();
+    }
     private IEnumerator FillDiscover›mage()
     {
         float value = gunDiscover›mage.fillAmount - 0.25f;
-        print(value);
+   
         while (value < gunDiscover›mage.fillAmount)
         {
 

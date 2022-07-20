@@ -10,6 +10,10 @@ public class Settings : MonoBehaviour
     [SerializeField] private Slider soundVolumeSlider;
     private Button goToSettingsBtn;
     private Button backButton;
+
+    private float defaultMusicVolume = 0.10f;
+    private float defaultSoundVolume = 0.10f;
+
     private bool isPanelActive;
     void Awake()
     {
@@ -20,6 +24,12 @@ public class Settings : MonoBehaviour
         backButton.onClick.AddListener(DeActivateSettingsPanel);
         musicVolumeSlider.onValueChanged.AddListener(MusicVolumeSettings);
         soundVolumeSlider.onValueChanged.AddListener(SoundVolumeSettings);
+        
+    }
+    private void Start()
+    {
+        musicVolumeSlider.value=MusicManager.instance.Volume;
+        soundVolumeSlider.value = SoundManager.instance.Volume;
     }
     private void SoundVolumeSettings(float volume)
     {

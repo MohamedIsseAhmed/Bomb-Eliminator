@@ -41,15 +41,14 @@ public class Enemy : MonoBehaviour
         healthSystem.OnDead += HealthSystem_OnDead;
 
     }
-
+    
     private void HealthSystem_OnDead(object sender, System.EventArgs e)
     {
-        
         enabled = false;
         GetComponent<CapsuleCollider>().enabled = false;
         GetComponent<HealthSystem>().enabled = false;
     }
-    Attacking attacking1;
+   
     private void OnDisable()
     {
         healthSystem.OnDead -= HealthSystem_OnDead;
@@ -58,11 +57,7 @@ public class Enemy : MonoBehaviour
     {
         currentState = currentState.StateProcessor();
     }
-    //public Transform GetWeapon()
-    //{
-    //    return weapon;
-    //}
-   
+    
     public void ActivateCrossHair(bool is›nShhotingRange)
     {
         crossHair.ShowCrossHair(is›nShhotingRange);

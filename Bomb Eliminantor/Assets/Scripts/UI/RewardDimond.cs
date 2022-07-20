@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
-public class RewardDimond : ObjectPoolBase<Image>
+using System;
+
+public class RewardDimond : MonoBehaviour
 {
     [Header("Dimond instantaition")]
-    [SerializeField] private Image dimond›con;
-    [SerializeField] private List<GameObject> dimondsTo›nstantaite;
+    [SerializeField] private Transform dimond›con;
     [SerializeField] private int dimondCountsToInstantaite = 350;
     [SerializeField] private float dimondsRewardedPerLevel = 0;
     [SerializeField] private int CurrentdimondCounts =0;
@@ -20,28 +21,58 @@ public class RewardDimond : ObjectPoolBase<Image>
 
     [Header("About Dimond Text increasing")]
     [SerializeField] private float timeToWaite = 0.10f;
-    //[SerializeField] private float lerpSpeed = 0.10f;
     [SerializeField] private float tweenTime = 0.10f;
     [SerializeField] private WinPanel winPanel;
     [SerializeField] private TextMeshProUGUI dimondCounterText;
+    [SerializeField] private TextMeshProUGUI normalDimondCountText;
     [SerializeField] private float textLerpSpeed = 0.5f;
     private bool canAnimateText;
-    protected override void  Start()
-    {
-        prefabTo›nstantiate = dimond›con;
-        objectCount = dimondCountsToInstantaite;
-        CreateBulletPool(posiontToSpawn.position,parent);
-        winPanel.ShowDmiondEvent += WinPanel_ShowDmiondEvent;
+    
+    [SerializeField] private Transform poolBulletParent;
+    [SerializeField] private float timeAfterToActivatePooledObjects = 2;
+    private List<Transform> dimonds;
+    [SerializeField] private int dimondCount=120;
 
+    public static event EventHandler LoadLevelEvent;
+
+    private Tween dimondMoveTween;
+   
+    void Awake()
+    {
+        dimonds = new List<Transform>();
+    }
+    private void Start()
+    {
+        winPanel.ShowDmiondEvent+= WinPanel_ShowDmiondEvent;
         CurrentdimondCounts = PlayerPrefs.GetInt("CurrentdimondCounts", 0);
         dimondCounterText.text = CurrentdimondCounts.ToString("F0");
         dimondsRewardedPerLevel += CurrentdimondCounts;
+        normalDimondCountText.text= (dimondsRewardedPerLevel- CurrentdimondCounts).ToString("F0");
+        CreateDimondPool();
     }
-
-    private void WinPanel_ShowDmiondEvent(object sender, System.EventArgs e)
+    private void CreateDimondPool()
     {
+        for (int i = 0; i < dimondCount; i++)
+        {
+            Transform bullet = Instantiate(dimond›con, transform.position, Quaternion.identity, parent);
+            bullet.gameObject.SetActive(false);
+            dimonds.Add(bullet);
+        }
+    }
+   
+
+    private void WinPanel_ShowDmiondEvent(object sender, WinPanel.DimondCountNumberEventArgs e)
+    {
+        dimondsRewardedPerLevel += e.numberOfDimondsToReward*100;
+        print("per" + dimondsRewardedPerLevel);
         canAnimateText = true;
-        StartCoroutine(MoveDimondsToTargetOnEnd());
+        int dimondsToActivateOnEndModifier = 1;
+        if (e.numberOfDimondsToReward > 1)
+        { 
+           dimondsToActivateOnEndModifier = e.numberOfDimondsToReward / 2;
+        }
+       
+        StartCoroutine(MoveDimondsToTargetOnEnd(dimondsToActivateOnEndModifier));
     }
     private void Update()
     {
@@ -51,9 +82,8 @@ public class RewardDimond : ObjectPoolBase<Image>
             StartCoroutine(›ncreaseDimondCAount());
         }
     }
-    IEnumerator ›ncreaseDimondCAount()
+    private IEnumerator ›ncreaseDimondCAount()
     {
-
         while (CurrentdimondCounts<dimondsRewardedPerLevel)
         {
             CurrentdimondCounts++;
@@ -61,41 +91,54 @@ public class RewardDimond : ObjectPoolBase<Image>
             yield return new WaitForSeconds(textLerpSpeed);
         }
         PlayerPrefs.SetInt("CurrentdimondCounts", CurrentdimondCounts);
-        print(PlayerPrefs.GetInt("CurrentdimondCounts"));
         canAnimateText=false;
+        
     }
-    public override Image GetBullet(Transform projectileSpawnPosition)
+   
+    public  Transform GetBullet(Transform projectileSpawnPosition)
     {
-        for (int i = 0; i < objectCount; i++)
+        for (int i = 0; i < dimondCountsToInstantaite; i++)
         {
-            if (!poolList[i].gameObject.activeInHierarchy)
+            if (!dimonds[i].gameObject.activeInHierarchy)
             {
-                poolList[i].gameObject.SetActive(true);
-                poolList[i].transform.position = projectileSpawnPosition.position;
-                poolList[i].transform.rotation = Quaternion.identity;
-                return poolList[i].GetComponent<Image>();
+                dimonds[i].gameObject.SetActive(true);
+                dimonds[i].transform.position = projectileSpawnPosition.position;
+                dimonds[i].transform.rotation = Quaternion.identity;
+                return dimonds[i];
             }
         }
         return null;
     }
-   private IEnumerator MoveDimondsToTargetOnEnd()
+   private IEnumerator MoveDimondsToTargetOnEnd(int _dimondsToActivateOnEndModifier=1)
     {
+        dimondsToActivateOnEnd*= _dimondsToActivateOnEndModifier;
         for (int i = 0; i < dimondsToActivateOnEnd; i++)
-        {
-            if (!poolList[i].gameObject.activeInHierarchy)
+        {   
+            if (!dimonds[i].gameObject.activeInHierarchy)
             {
-                poolList[i].gameObject.SetActive(true);
-                poolList[i].transform.rotation = Quaternion.identity;
-                poolList[i].transform.DOMove(destinationOfDimonds.position, tweenTime); /*= Vector3.MoveTowards(poolList[i].transform.position, destinationOfDimonds, lerpSpeed * Time.deltaTime);*/
-                StartCoroutine(DeActivateDimond(poolList[i].transform));
+                dimonds[i].gameObject.SetActive(true);
+                dimonds[i].transform.rotation = Quaternion.identity;
+                dimondMoveTween= dimonds[i].transform.DOMove(destinationOfDimonds.position, tweenTime);
+                StartCoroutine(DeActivateDimond(dimonds[i].transform));
             }
             yield return new WaitForSeconds(timeToWaite);
 
         }
+        LoadLevelEvent?.Invoke(this, EventArgs.Empty);
+        dimondMoveTween.Kill();
     }
+    
     IEnumerator DeActivateDimond(Transform item)
     {
         yield return new WaitForSeconds(timeToWaite);
         item.gameObject.SetActive(false);
+    }
+    private void OnDisable()
+    {
+        dimondMoveTween.Kill();
+    }
+    private void OnDestroy()
+    {
+        dimondMoveTween.Kill();
     }
 }
