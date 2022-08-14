@@ -3,133 +3,137 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using System;
-public class Attacking : EnemyState,IAimAndShoot
+namespace Enemy
 {
-  
-    private Vector3 weaponOrigingPosition;
-    private Vector3 weaponOriginRotation;
-   
-    public event EventHandler OnShootingStarted;
-
-    private float timer;
-    private float timerMax;
-
-    private float distanceToTarget=7.55f;
-    private Vector3 directionToPlayer = Vector3.zero;
-    private float turnSpeed = 15f;
-
-    private int Obstaclelayer = 1 << 7;
-    private int maxRayDistance = 5;
-    private Transform projectileSpawnPosition;
-    public Attacking(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent,Transform currentGun) :
-        base(_npc, _animator, _player, _navMeshAgent, currentGun)
+    public class Attacking : EnemyState, IAimAndShoot
     {
-        stateName = EnemyState.State.Attcking;
-        timerMax = 1f;
-    }
-    public override void Enter()
-    {
-        projectileSpawnPosition = currentGun.GetComponent<Weapon>().prjectileSpawnPosition;
-        weaponOrigingPosition = currentGun.localPosition;
-        weaponOriginRotation = currentGun.localEulerAngles;
-        animator.SetTrigger("Run");
-        navMeshAgent.isStopped = true;
-        base.Enter();
-    }
-    string state;
-    public override void Update()
-    {
-        directionToPlayer = player.transform.position - npc.transform.position;
-        Quaternion lookDirection = Quaternion.LookRotation(directionToPlayer);
-        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookDirection, turnSpeed * Time.deltaTime);
-       
-        if (Vector3.Distance(player.transform.position, navMeshAgent.transform.position) > distanceToTarget)
+
+        private Vector3 weaponOrigingPosition;
+        private Vector3 weaponOriginRotation;
+
+        public event EventHandler OnShootingStarted;
+
+        private float timer;
+        private float timerMax;
+
+        private float distanceToTarget = 7.55f;
+        private Vector3 directionToPlayer = Vector3.zero;
+        private float turnSpeed = 15f;
+
+        private int Obstaclelayer = 1 << 7;
+        private int maxRayDistance = 5;
+        private Transform projectileSpawnPosition;
+        public Attacking(GameObject _npc, Animator _animator, Transform _player, NavMeshAgent _navMeshAgent, Transform currentGun) :
+            base(_npc, _animator, _player, _navMeshAgent, currentGun)
         {
-
-            state = "stop";
-            navMeshAgent.SetDestination(player.transform.position);
-            navMeshAgent.isStopped = false;
-            BringBackWeaponToOrigingPosition();
+            stateName = EnemyState.State.Attcking;
+            timerMax = 1f;
         }
-        else
+        public override void Enter()
         {
+            projectileSpawnPosition = currentGun.GetComponent<Weapon>().prjectileSpawnPosition;
+            weaponOrigingPosition = currentGun.localPosition;
+            weaponOriginRotation = currentGun.localEulerAngles;
+            animator.SetTrigger("Run");
+            navMeshAgent.isStopped = true;
+            base.Enter();
+        }
+        string state;
+        public override void Update()
+        {
+            directionToPlayer = player.transform.position - npc.transform.position;
+            Quaternion lookDirection = Quaternion.LookRotation(directionToPlayer);
+            npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, lookDirection, turnSpeed * Time.deltaTime);
 
-            if (!CheckObstaclesInMyFront())
+            if (Vector3.Distance(player.transform.position, navMeshAgent.transform.position) > distanceToTarget)
             {
-                animator.ResetTrigger(state);
-                state = "Fire";
-                GunPositionOnShooting();
-                navMeshAgent.isStopped = true;
-                AimAndShoot(player);
-                Fire();
-                if (player.GetComponent<HealthSystem>().ÝsDead())
-                {
-                    nextState = new Ýdle(npc, animator, player, navMeshAgent, currentGun, patrollingRunner);
-                    eventStages = EventStages.Exit;
-                }
-            }
-            else
-            {
+
                 state = "stop";
                 navMeshAgent.SetDestination(player.transform.position);
                 navMeshAgent.isStopped = false;
                 BringBackWeaponToOrigingPosition();
             }
+            else
+            {
 
+                if (!CheckObstaclesInMyFront())
+                {
+                    animator.ResetTrigger(state);
+                    state = "Fire";
+                    GunPositionOnShooting();
+                    navMeshAgent.isStopped = true;
+                    AimAndShoot(player);
+                    Fire();
+                    if (player.GetComponent<HealthSystem>().ÝsDead())
+                    {
+                        nextState = new Ýdle(npc, animator, player, navMeshAgent, currentGun, patrollingRunner);
+                        eventStages = EventStages.Exit;
+                    }
+                }
+                else
+                {
+                    state = "stop";
+                    navMeshAgent.SetDestination(player.transform.position);
+                    navMeshAgent.isStopped = false;
+                    BringBackWeaponToOrigingPosition();
+                }
+
+            }
+
+            animator.SetTrigger(state);
         }
 
-        animator.SetTrigger(state);
-    }
-
-    private bool CheckObstaclesInMyFront()
-    {
-        Ray ray = new Ray(npc.transform.position, player.transform.position-npc.transform.position);
-        RaycastHit raycastHit;
-       
-        return Physics.Raycast(ray, out raycastHit, maxRayDistance, Obstaclelayer);
-    }
-
-    public override void Exit()
-    {
-        animator.ResetTrigger("Run");
-       
-        base.Exit();
-    }
-    private void GunPositionOnShooting()
-    {
-      
-        currentGun.localPosition= new Vector3(0.294999987f, 0.947000027f, 0.147f);
-        currentGun.localEulerAngles =new Vector3(300.602997f, 75.4687881f, 348.521545f);
-       
-    }
-    private void BringBackWeaponToOrigingPosition()
-    {
-       
-        currentGun.localPosition = weaponOrigingPosition;
-        currentGun.localEulerAngles = weaponOriginRotation;
-    }
-
-    public void AimAndShoot(Transform target)
-    {
-       
-    }
-    public Transform GetPlayerTransform()
-    {
-        return player;
-    }
-    private void Fire()
-    {
-        GunPositionOnShooting();
-        if (timer > timerMax)
+        private bool CheckObstaclesInMyFront()
         {
-            timer = 0;
-            Shoot();
+            Ray ray = new Ray(npc.transform.position, player.transform.position - npc.transform.position);
+            RaycastHit raycastHit;
+
+            return Physics.Raycast(ray, out raycastHit, maxRayDistance, Obstaclelayer);
         }
-        timer += Time.deltaTime;
+
+        public override void Exit()
+        {
+            animator.ResetTrigger("Run");
+
+            base.Exit();
+        }
+        private void GunPositionOnShooting()
+        {
+
+            currentGun.localPosition = new Vector3(0.294999987f, 0.947000027f, 0.147f);
+            currentGun.localEulerAngles = new Vector3(300.602997f, 75.4687881f, 348.521545f);
+
+        }
+        private void BringBackWeaponToOrigingPosition()
+        {
+
+            currentGun.localPosition = weaponOrigingPosition;
+            currentGun.localEulerAngles = weaponOriginRotation;
+        }
+
+        public void AimAndShoot(Transform target)
+        {
+
+        }
+        public Transform GetPlayerTransform()
+        {
+            return player;
+        }
+        private void Fire()
+        {
+            GunPositionOnShooting();
+            if (timer > timerMax)
+            {
+                timer = 0;
+                Shoot();
+            }
+            timer += Time.deltaTime;
+        }
+        private void Shoot()
+        {
+            EnemyBulletPool.instance.GetBullet(projectileSpawnPosition);
+        }
+
     }
-    private void Shoot()
-    {
-        EnemyBulletPool.instance.GetBullet(projectileSpawnPosition);
-    }
-   
 }
+

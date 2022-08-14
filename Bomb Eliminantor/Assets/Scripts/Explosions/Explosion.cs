@@ -1,7 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using GameUI;
 public class Explosion : MonoBehaviour
 {
     [SerializeField] private float explosionForce = 700;
@@ -12,6 +11,11 @@ public class Explosion : MonoBehaviour
     [SerializeField] private GameObject expolosionParticle;
 
     [SerializeField] private Transform expolosionPosition;
+
+    private float timeToWaitToDestroyExplosionParticle = 0.2f;
+
+    private float xAxisrandomMin = -5;
+    private float xAxisrandomMax = 2;
 
     private int civilLayer = 1 << 10;
     void Start()
@@ -45,7 +49,7 @@ public class Explosion : MonoBehaviour
     }
     private Vector3 GetRandomPosition()
     {
-        return new Vector3(Random.Range(-5, 2), 0, 0);
+        return new Vector3(Random.Range(xAxisrandomMin, xAxisrandomMax), 0, 0);
     }
 
     private IEnumerator InstantiateExplosion()
@@ -54,7 +58,7 @@ public class Explosion : MonoBehaviour
         SoundManager.instance.PlaySound(SoundManager.Sound.GameOver);
         Vector3 explosionParticlePosition = newParticle.transform.position;
         StartCoroutine(ExplosionCoroutine(explosionParticlePosition));
-        yield return new WaitForSeconds(0.20f);
+        yield return new WaitForSeconds(timeToWaitToDestroyExplosionParticle);
         Destroy(newParticle.gameObject);
     }
 }

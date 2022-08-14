@@ -2,7 +2,7 @@ using System.Collections;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using GameUI;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager instance;
@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
     {
         if (isFirstSceneLoaded)
         {
-            SceneManager.LoadSceneAsync(currentLevel);
+            SceneManager.LoadSceneAsync(1);
         }
     }
     private void Start()

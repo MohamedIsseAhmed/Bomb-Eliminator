@@ -204,17 +204,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &379969501 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7294087412597022160, guid: cb2f17d36d34b7c489721318d1945b51, type: 3}
-  m_PrefabInstance: {fileID: 1572236040448032134}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba0d0e7a039f526499c356a3c5cd6d3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &388705176
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,6 +501,17 @@ MonoBehaviour:
   bombDirectionPointer: {fileID: 1117992474}
   endValueY: -2.2
   duration: 1
+--- !u!114 &914758069 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4429148635174666382, guid: cb2f17d36d34b7c489721318d1945b51, type: 3}
+  m_PrefabInstance: {fileID: 1572236040448032134}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45977bbae16431c46a013576a1aea384, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &920605841
 GameObject:
   m_ObjectHideFlags: 0
@@ -1165,7 +1165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1848584704
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1407,7 +1407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 6ac093a287218084dabdd5ed44e3c39b, type: 2}
   m_Color: {r: 0.9649927, g: 0.9481132, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -1580,6 +1580,14 @@ PrefabInstance:
     - target: {fileID: 388535786614724079, guid: 26bc8519bd92704468e53b3649c07727, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 388535786742828376, guid: 26bc8519bd92704468e53b3649c07727, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.70710677
+      objectReference: {fileID: 0}
+    - target: {fileID: 388535786742828376, guid: 26bc8519bd92704468e53b3649c07727, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.70710677
       objectReference: {fileID: 0}
     - target: {fileID: 388535786787363376, guid: 26bc8519bd92704468e53b3649c07727, type: 3}
       propertyPath: m_Layer
@@ -1836,7 +1844,7 @@ PrefabInstance:
     - target: {fileID: 2083202329936833817, guid: 1d6d6c693fcc47f4abdd0f47c412aa12, type: 3}
       propertyPath: dynamicJoystick
       value: 
-      objectReference: {fileID: 379969501}
+      objectReference: {fileID: 914758069}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d6d6c693fcc47f4abdd0f47c412aa12, type: 3}
 --- !u!1001 &3665957857051934932

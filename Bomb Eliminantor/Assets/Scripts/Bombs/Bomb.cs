@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using GameUI;
 using UnityEngine;
 using System;
 public class Bomb : MonoBehaviour
@@ -9,21 +8,16 @@ public class Bomb : MonoBehaviour
 
     public static event EventHandler StopBombPointerAnimation;
 
+   
     private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player") && GameManager.instance.CanShowBombVisual)
         {
+            collision.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
             StopBombPointerAnimation?.Invoke(this, EventArgs.Empty);
+            GameManager.instance.LevelComplated = true;
             bombVisual.SetActive(true);
         }
     }
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player") &&GameManager.instance.CanShowBombVisual)
-        {
-           
-            bombVisual.GetComponent<BombVisual>().Timer = 0;
-            bombVisual.SetActive(false);
-        }
-    }
+   
 }

@@ -6,9 +6,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-   public bool GameOver { get; set; }
-   public bool CanShowBombVisual { get; private set; }
-   public static event EventHandler OnGameOver;
+    public bool GameOver { get; set; }
+    public bool CanShowBombVisual { get; private set; }
+    public bool LevelComplated { get; internal set; }
+
+    public static event EventHandler OnGameOver;
 
     private void Awake()
     {
@@ -16,12 +18,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-        else
-        {
-            Destroy(gameObject);
-
-        }
-        DontDestroyOnLoad(gameObject);
+      
     }
     private void Start()
     {

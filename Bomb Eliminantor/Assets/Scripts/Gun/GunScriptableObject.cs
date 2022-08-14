@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using GameUI;
 [CreateAssetMenu(menuName = "GunScriptableObject/GunType")]
 public class GunScriptableObject : ScriptableObject
 {

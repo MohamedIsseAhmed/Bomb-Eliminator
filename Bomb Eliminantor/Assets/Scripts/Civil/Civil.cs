@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+using GameUI;
 public class Civil : MonoBehaviour
 {
     private Animator animator;
