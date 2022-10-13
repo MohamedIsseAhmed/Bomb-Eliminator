@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
     {
         if (isFirstSceneLoaded)
         {
-            SceneManager.LoadSceneAsync(1);
+            SceneManager.LoadSceneAsync(currentLevel);
         }
     }
     private void Start()

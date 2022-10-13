@@ -41,7 +41,7 @@ namespace GameUI
             backGround.SetActive(true);
             gameOverPanel.SetActive(true);
             gameOverPanel.transform.localScale = Vector3.zero;
-            gameOverPanel.transform.DOScale(Vector3.one, tweenScaleTime);
+            gameOverPanel.transform.DOScale(new Vector3(0.54f,0.54f,0f), tweenScaleTime);
         }
         private void ReloadLevel()
         {

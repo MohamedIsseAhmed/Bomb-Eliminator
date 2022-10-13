@@ -27,9 +27,7 @@ namespace GameUI
 
         [SerializeField] Ease ease;
         private Tween chancetween;
-        private Tween winPaneltween;
-        private Tween claimButtonScaleTween;
-
+     
         [SerializeField] private float X2Min = -164f, X2Max = -100f;
         [SerializeField] private float X3Min = -100f, X3Max = -36f;
         [SerializeField] private float X4Min = -31f, X4Max = 36f;
@@ -60,7 +58,7 @@ namespace GameUI
             backGround.SetActive(true);
             claimButton.SetActive(false);
             yield return new WaitForSeconds(waiteTime);
-            winPanel.GetComponent<RectTransform>().DOScale(Vector3.one, scaleTweenTime);
+            winPanel.GetComponent<RectTransform>().DOScale(new Vector3(0.504670024f, 0.504670024f, 0), scaleTweenTime);
             levelText.text = "LEVEL " + PlayerPrefs.GetInt("currentLevel").ToString();
             yield return new WaitForSeconds(waiteTime * 3);
             claimButton.SetActive(true);

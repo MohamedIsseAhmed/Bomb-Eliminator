@@ -1,3 +1,4 @@
+using GameUI;
 using System.Collections;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace Player
 {
     public class PlayerController : MonoBehaviour
     {
-        public FixedJoystick dynamicJoystick;
+        public DynamicJoystick dynamicJoystick;
         [SerializeField] private LayerMask enemyLayerMaks;
         [SerializeField] private float speed;
         [SerializeField] private float radius;
@@ -63,8 +64,7 @@ namespace Player
             CreateCircle();
 
         }
-
-
+    
         void CreateCircle()
         {
             float x;
@@ -100,7 +100,7 @@ namespace Player
 
                 isDraging = true;
             }
-            if (Input.GetButton("Fire1"))
+            if (Input.GetMouseButton(0))
             {
 
                 HandleMovemnt();
